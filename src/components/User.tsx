@@ -1,5 +1,6 @@
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { PermissionType, UserObject } from "../types/userTypes";
+import { UserObject } from "../types/userTypes";
 import Button from "./UI/Button";
 
 const User: React.FC<{ user: UserObject }> = ({ user }) => {
@@ -7,6 +8,23 @@ const User: React.FC<{ user: UserObject }> = ({ user }) => {
 
   const handleEdit = () => {
     navigate(`/users/${user._id}`);
+  };
+
+  const handleDelete = async () => {
+    try {
+      const address = `${import.meta.env.VITE_CINEMA_USERS_API}/${user._id}`;
+      console.log(address);
+      const res = await axios.delete(address);
+      if (res.status === 200) {
+        navigate(0);
+      } else {
+        //eslint-disable-next-line no-console
+        console.log(res);
+      }
+    } catch (error) {
+      //eslint-disable-next-line no-console
+      console.log(error);
+    }
   };
 
   return (
@@ -17,9 +35,9 @@ const User: React.FC<{ user: UserObject }> = ({ user }) => {
       <p>Created Data: {user.createdAt?.toLocaleDateString()}</p>
       <p>Permissions: {user.permissions}</p>
 
-      <div className="flex flex-wrap flex-auto justify-end gap-2  items-end">
+      <div className="flex flex-wrap flex-auto justify-end gap-2 items-end">
         <Button onClick={handleEdit}>Edit</Button>
-        <Button>Delete</Button>
+        <Button onClick={handleDelete}>Delete</Button>
       </div>
     </div>
   );
