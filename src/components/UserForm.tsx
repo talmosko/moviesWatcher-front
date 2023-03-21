@@ -5,12 +5,21 @@ import {
   useForm,
   UseFormRegister,
 } from "react-hook-form";
-import { AllPermissions, UserObject, UserSchema } from "../types/userTypes";
+import {
+  AllPermissions,
+  MoviesCUDPermissions,
+  PermissionType,
+  SubscriptionsCUDPermissions,
+  UserObject,
+  UserSchema,
+  ViewMoviesPermission,
+  ViewSubscriptionPermission,
+} from "../types/userTypes";
 import Button from "./UI/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import ErrorMessage from "./UI/ErrorMessage";
 
 type UserFormProps = {
@@ -85,9 +94,8 @@ const UserForm = (props: UserFormProps) => {
 
         {isEdit && (
           <div className="flex flex-wrap gap-2">
-            <FieldLabel>Created Data:</FieldLabel>
-            <p className="text-blue-800 text-xs self-center">
-              {" "}
+            <FieldLabel className="self-center">Created Data:</FieldLabel>
+            <p className="text-blue-800 self-center">
               {user.createdAt?.toLocaleDateString()}
             </p>
           </div>
@@ -114,6 +122,29 @@ type PermissionsFieldsProps = {
   isEdit: boolean;
 };
 
+const addMissingPermissions = (
+  userPermissions: PermissionType[] | undefined,
+  permission: PermissionType
+) => {
+  let newPermissions = userPermissions ? [...userPermissions] : [];
+  newPermissions.push(permission);
+  if (
+    MoviesCUDPermissions.includes(
+      permission as typeof MoviesCUDPermissions[number]
+    )
+  )
+    newPermissions.push(ViewMoviesPermission);
+
+  if (
+    SubscriptionsCUDPermissions.includes(
+      permission as typeof SubscriptionsCUDPermissions[number]
+    )
+  )
+    newPermissions.push(ViewSubscriptionPermission);
+
+  return newPermissions;
+};
+
 const PermissionsFields = ({
   user,
   control,
@@ -126,7 +157,7 @@ const PermissionsFields = ({
         control={control}
         name="permissions"
         defaultValue={isEdit ? user!.permissions : []}
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ field: { onChange, onBlur, value: userPermissions } }) => (
           <>
             {AllPermissions.map((permission, key) => (
               <div className="flex gap-1" key={permission}>
@@ -134,13 +165,19 @@ const PermissionsFields = ({
                   key={permission + "input"}
                   type="checkbox"
                   name={permission}
-                  checked={value?.includes(permission) || false}
+                  checked={userPermissions?.includes(permission) || false}
                   onChange={(e) => {
                     const { checked } = e.target as HTMLInputElement;
                     if (checked) {
-                      onChange(value ? [...value, permission] : [permission]);
+                      onChange(
+                        addMissingPermissions(userPermissions, permission)
+                      );
                     } else {
-                      onChange(value?.filter((r: string) => r !== permission));
+                      onChange(
+                        userPermissions?.filter(
+                          (r: PermissionType) => r !== permission
+                        )
+                      );
                     }
                   }}
                   onBlur={onBlur}
@@ -173,13 +210,20 @@ const UserField = ({
   errors,
 }: UserFieldProps) => {
   return (
-    <div className="flex flex-wrap flex-col gap-2">
-      <FieldLabel htmlFor={htmlFor}>{fieldLabel}</FieldLabel>
+    <div className="w-80 grid grid-cols-2 grid-rows-2">
+      <FieldLabel
+        className="self-center col-start-1 col-end-2 row-start-1 "
+        htmlFor={htmlFor}
+      >
+        {fieldLabel}
+      </FieldLabel>
       {errors[htmlFor] && (
-        <ErrorMessage>{errors[htmlFor]!.message}</ErrorMessage>
+        <ErrorMessage className="self-center justify-self-end col-start-2 col-end-3 row-start-1">
+          {errors[htmlFor]!.message}
+        </ErrorMessage>
       )}
       <input
-        className="border rounded-md w-24 text-xs border-blue-800 text-blue-800 focus:outline-none focus:ring-1 focus:ring-blue-600"
+        className="border  p-2 rounded-md col-start-1 col-end-3 row-start-2 w-80 h-8 border-blue-800 text-blue-800 focus:outline-none focus:ring-1 focus:ring-blue-600"
         type={type}
         {...register(htmlFor, {
           required: true,
@@ -193,12 +237,16 @@ const UserField = ({
 const FieldLabel = ({
   htmlFor,
   children,
-}: {
-  htmlFor?: keyof UserObject;
-  children: ReactNode;
-}) => {
+  className,
+}: React.DetailedHTMLProps<
+  React.LabelHTMLAttributes<HTMLLabelElement>,
+  HTMLLabelElement
+>) => {
   return (
-    <label className="font-medium" htmlFor={htmlFor}>
+    <label
+      className={`font-medium text-xs text-gray-600 ${className}`}
+      htmlFor={htmlFor}
+    >
       {children}
     </label>
   );
