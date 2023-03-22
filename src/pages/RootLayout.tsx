@@ -8,6 +8,8 @@ export default function RootLayout() {
           <ul>
             <li>
               <NavLink to="/users/">Users</NavLink>
+              <NavLink to="/movies/">Movies</NavLink>
+              <NavLink to="/members/">Members</NavLink>
             </li>
           </ul>
         </div>

@@ -6,12 +6,13 @@ import {
   LoaderFunctionArgs,
   useLoaderData,
 } from "react-router-dom";
-import UserForm from "../components/UserForm";
-import { UserObject } from "../types/userTypes";
+import UserForm from "../../components/User/UserForm";
+import { UserObject } from "../../types/userTypes";
 
 export default function UserDetails() {
   const data: any = useLoaderData();
 
+  //TODO: Maybe transfer user data from store? why do we need another request?
   return (
     <Suspense fallback={<p>Loading User Data...</p>}>
       <Await resolve={data.user} errorElement={<p>Failed to retrieve user</p>}>

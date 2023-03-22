@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { UserObject } from "../types/userTypes";
-import Button from "./UI/Button";
+import { UserObject } from "../../types/userTypes";
+import Button from "../UI/Button";
+import Card, { CardSubTitle, CardTitle } from "../UI/Card";
+import EntityButtons from "../UI/EntityButtons";
 
 const User: React.FC<{ user: UserObject }> = ({ user }) => {
   const navigate = useNavigate();
@@ -13,9 +15,9 @@ const User: React.FC<{ user: UserObject }> = ({ user }) => {
   const handleDelete = async () => {
     try {
       const address = `${import.meta.env.VITE_CINEMA_USERS_API}/${user._id}`;
-      console.log(address);
       const res = await axios.delete(address);
       if (res.status === 200) {
+        //TODO: something more elegant with store
         navigate(0);
       } else {
         //eslint-disable-next-line no-console
@@ -28,18 +30,15 @@ const User: React.FC<{ user: UserObject }> = ({ user }) => {
   };
 
   return (
-    <div className="flex flex-col w-80 rounded-md bg-white p-2">
-      <h3 className="text-gray-500 font-medium">{user.fullName}</h3>
-      <h4 className="font-semibold">{user.userName}</h4>
+    <Card className="sm:w-92 flex-col">
+      <CardTitle>{user.fullName}</CardTitle>
+      <CardSubTitle>{user.userName}</CardSubTitle>
       <p>Session Time Out (Minutes): {user.sessionTimeout}</p>
       <p>Created Data: {user.createdAt?.toLocaleDateString()}</p>
       <p>Permissions: {user.permissions}</p>
 
-      <div className="flex flex-wrap flex-auto justify-end gap-2 items-end">
-        <Button onClick={handleEdit}>Edit</Button>
-        <Button onClick={handleDelete}>Delete</Button>
-      </div>
-    </div>
+      <EntityButtons onEdit={handleEdit} onDelete={handleDelete} />
+    </Card>
   );
 };
 

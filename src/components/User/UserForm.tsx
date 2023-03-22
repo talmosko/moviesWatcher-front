@@ -1,26 +1,21 @@
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  useForm,
-  UseFormRegister,
-} from "react-hook-form";
+import { Control, Controller, useForm } from "react-hook-form";
 import {
   AllPermissions,
+  AllPermissionsDict,
   MoviesCUDPermissions,
   PermissionType,
   SubscriptionsCUDPermissions,
   UserObject,
   UserSchema,
-  ViewMoviesPermission,
-  ViewSubscriptionPermission,
-} from "../types/userTypes";
-import Button from "./UI/Button";
+} from "../../types/userTypes";
+import Button from "../UI/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import ErrorMessage from "./UI/ErrorMessage";
+import ErrorMessage from "../UI/ErrorMessage";
+import Card from "../UI/Card";
+import FormField, { FieldLabel } from "../UI/FormField";
 
 type UserFormProps = {
   user?: UserObject;
@@ -61,30 +56,30 @@ const UserForm = (props: UserFormProps) => {
     }
   };
   return (
-    <div>
+    <Card className="w-3/5 flex-col">
       <form
-        className="flex flex-wrap gap-2 flex-col w-3/5 rounded-md bg-white p-2"
+        className="flex flex-wrap gap-2 flex-col rounded-md bg-white"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <UserField
+        <FormField
           htmlFor="firstName"
           fieldLabel="First Name"
           register={register}
           errors={errors}
         />
-        <UserField
+        <FormField
           htmlFor="lastName"
           fieldLabel="Last Name"
           register={register}
           errors={errors}
         />
-        <UserField
+        <FormField
           htmlFor="userName"
           fieldLabel="User Name"
           errors={errors}
           register={register}
         />
-        <UserField
+        <FormField
           htmlFor="sessionTimeout"
           type="number"
           fieldLabel="Session Timeout (Mins)"
@@ -112,7 +107,7 @@ const UserForm = (props: UserFormProps) => {
         </div>
         {submitError && <ErrorMessage>{submitError}</ErrorMessage>}
       </form>
-    </div>
+    </Card>
   );
 };
 
@@ -133,14 +128,14 @@ const addMissingPermissions = (
       permission as typeof MoviesCUDPermissions[number]
     )
   )
-    newPermissions.push(ViewMoviesPermission);
+    newPermissions.push(AllPermissionsDict.ViewMovies);
 
   if (
     SubscriptionsCUDPermissions.includes(
       permission as typeof SubscriptionsCUDPermissions[number]
     )
   )
-    newPermissions.push(ViewSubscriptionPermission);
+    newPermissions.push(AllPermissionsDict.ViewSubscriptions);
 
   return newPermissions;
 };
@@ -191,64 +186,6 @@ const PermissionsFields = ({
         )}
       />
     </div>
-  );
-};
-
-type UserFieldProps = {
-  htmlFor: keyof UserObject;
-  fieldLabel: string;
-  type?: string;
-  register: UseFormRegister<UserObject>;
-  errors: FieldErrors<UserObject>;
-};
-
-const UserField = ({
-  htmlFor,
-  fieldLabel,
-  type = "text",
-  register,
-  errors,
-}: UserFieldProps) => {
-  return (
-    <div className="w-80 grid grid-cols-2 grid-rows-2">
-      <FieldLabel
-        className="self-center col-start-1 col-end-2 row-start-1 "
-        htmlFor={htmlFor}
-      >
-        {fieldLabel}
-      </FieldLabel>
-      {errors[htmlFor] && (
-        <ErrorMessage className="self-center justify-self-end col-start-2 col-end-3 row-start-1">
-          {errors[htmlFor]!.message}
-        </ErrorMessage>
-      )}
-      <input
-        className="border  p-2 rounded-md col-start-1 col-end-3 row-start-2 w-80 h-8 border-blue-800 text-blue-800 focus:outline-none focus:ring-1 focus:ring-blue-600"
-        type={type}
-        {...register(htmlFor, {
-          required: true,
-          valueAsNumber: type === "number",
-        })}
-      />
-    </div>
-  );
-};
-
-const FieldLabel = ({
-  htmlFor,
-  children,
-  className,
-}: React.DetailedHTMLProps<
-  React.LabelHTMLAttributes<HTMLLabelElement>,
-  HTMLLabelElement
->) => {
-  return (
-    <label
-      className={`font-medium text-xs text-gray-600 ${className}`}
-      htmlFor={htmlFor}
-    >
-      {children}
-    </label>
   );
 };
 

@@ -12,25 +12,33 @@ export const AllPermissions = [
   "Site Admin",
 ] as const;
 
-export const SubscriptionsCUDPermissions = [
-  AllPermissions[1],
-  AllPermissions[2],
-  AllPermissions[3],
-] as const;
-
-export const ViewSubscriptionPermission = AllPermissions[0];
-
-export const MoviesCUDPermissions = [
-  AllPermissions[5],
-  AllPermissions[6],
-  AllPermissions[7],
-] as const;
-
-export const ViewMoviesPermission = AllPermissions[4];
-
 export const PermissionsTypesSchema = z.enum(AllPermissions);
 
 export type PermissionType = z.infer<typeof PermissionsTypesSchema>;
+
+export const AllPermissionsDict = {
+  ViewSubscriptions: AllPermissions[0],
+  CreateSubscriptions: AllPermissions[1],
+  UpdateSubscriptions: AllPermissions[2],
+  DeleteSubscriptions: AllPermissions[3],
+  ViewMovies: AllPermissions[4],
+  CreateMovies: AllPermissions[5],
+  UpdateMovies: AllPermissions[6],
+  DeleteMovies: AllPermissions[7],
+  SiteAdmin: AllPermissions[8],
+} as const;
+
+export const SubscriptionsCUDPermissions = [
+  AllPermissionsDict.CreateSubscriptions,
+  AllPermissionsDict.UpdateSubscriptions,
+  AllPermissionsDict.DeleteSubscriptions,
+] as const;
+
+export const MoviesCUDPermissions = [
+  AllPermissionsDict.CreateMovies,
+  AllPermissionsDict.UpdateMovies,
+  AllPermissionsDict.DeleteMovies,
+] as const;
 
 export const UserSchema = z.object({
   _id: z.string().optional(),

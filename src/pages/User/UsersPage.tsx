@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import User from "../components/User";
+import User from "../../components/User/User";
 import axios from "axios";
-import { UserObject } from "../types/userTypes";
+import { UserObject } from "../../types/userTypes";
 const UsersPage = () => {
   const [users, setUsers] = useState<UserObject[]>([]);
   const [hasGetUsersError, setHasGetUsersError] = useState<boolean>(false);
