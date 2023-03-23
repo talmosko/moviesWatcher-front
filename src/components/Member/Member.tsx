@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { MemberObject } from "../../types/memberTypes";
+import SubscriptionForm from "../Subscription/SubscriptionForm";
 import Card, { CardSubTitle, CardTitle } from "../UI/Card";
 import EntityButtons from "../UI/EntityButtons";
 
@@ -35,7 +36,10 @@ const Member: React.FC<{ member: MemberObject }> = ({ member }) => {
       <CardTitle>{member.name}</CardTitle>
       <CardSubTitle>{member.email}</CardSubTitle>
       <p>{member.city}</p>
-
+      {member.subscriptions?.movies?.map((movie) => (
+        <p key={movie.movieId._id}>{`${movie.movieId.name} ${movie.date}`}</p>
+      ))}
+      <SubscriptionForm />
       <EntityButtons onEdit={handleEdit} onDelete={handleDelete} />
     </Card>
   );
