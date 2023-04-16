@@ -14,7 +14,7 @@ const MovieForm = ({ movie }: { movie?: MovieObject }) => {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { movieError: submitError } = useAppSelector((state) => state.errors);
+  const { error: submitError } = useAppSelector((state) => state.movies);
 
   const { register, handleSubmit, formState, control, watch } =
     useForm<MovieObject>({

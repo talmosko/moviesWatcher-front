@@ -23,9 +23,10 @@ const Member: React.FC<{ member: MemberObject }> = ({ member }) => {
       <CardTitle>{member.name}</CardTitle>
       <CardSubTitle>{member.email}</CardSubTitle>
       <p>{member.city}</p>
-      {member.subscriptions?.movies?.map((movie) => (
+      //TODO: Add subscriptions
+      {/* {member.subscriptions?.movies?.map((movie) => (
         <p key={movie.movieId._id}>{`${movie.movieId.name} ${movie.date}`}</p>
-      ))}
+      ))} */}
       <SubscriptionForm />
       <EntityButtons onEdit={handleEdit} onDelete={handleDelete} />
     </Card>

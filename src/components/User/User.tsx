@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserObject } from "../../types/userTypes";
-import Button from "../UI/Button";
 import Card, { CardSubTitle, CardTitle } from "../UI/Card";
 import EntityButtons from "../UI/EntityButtons";
 

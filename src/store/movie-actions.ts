@@ -1,21 +1,25 @@
 import axios from "axios";
 import { MovieObject } from "../types/movieTypes";
 import { movieActions } from "./movies-slice";
-import { errorsActions } from "./errors-slice";
+import { SubscriptionObject } from "../types/subscriptionTypes";
+import { AppDispatch } from ".";
 
 export const getAllMovies = () => {
-  return async function (dispatch: any) {
+  return async function (dispatch: AppDispatch) {
     try {
+      dispatch(movieActions.setMoviesLoading(true));
       const res = await axios.get(import.meta.env.VITE_CINEMA_MOVIES_API);
       if (res.status === 200) {
         if (res.data.movies) {
           let movies: MovieObject[] = res.data.movies;
           dispatch(movieActions.replaceAllMovies(movies as MovieObject[]));
-          dispatch(errorsActions.clearMovieError);
+          dispatch(movieActions.setMoviesError(null));
         }
       }
+      dispatch(movieActions.setMoviesLoading(false));
     } catch (error) {
-      dispatch(errorsActions.setMovieError("Failed to get movies"));
+      dispatch(movieActions.setMoviesLoading(false));
+      dispatch(movieActions.setMoviesError("Failed to get movies"));
       //eslint-disable-next-line no-console
       console.log(error);
     }
@@ -23,8 +27,9 @@ export const getAllMovies = () => {
 };
 
 export const addMovie = (data: MovieObject) => {
-  return async function (dispatch: any) {
+  return async function (dispatch: AppDispatch) {
     try {
+      dispatch(movieActions.setMoviesLoading(true));
       const res = await axios.post(
         import.meta.env.VITE_CINEMA_MOVIES_API,
         data
@@ -32,11 +37,13 @@ export const addMovie = (data: MovieObject) => {
       if (res.status === 200) {
         if (res.data.movie) {
           dispatch(movieActions.addMovie(res.data.movie as MovieObject));
-          dispatch(errorsActions.clearMovieError);
+          dispatch(movieActions.setMoviesError(null));
         }
       }
+      dispatch(movieActions.setMoviesLoading(false));
     } catch (error) {
-      dispatch(errorsActions.setMovieError("Failed to add movie"));
+      dispatch(movieActions.setMoviesLoading(false));
+      dispatch(movieActions.setMoviesError("Failed to add movie"));
       //eslint-disable-next-line no-console
       console.log(error);
     }
@@ -44,8 +51,9 @@ export const addMovie = (data: MovieObject) => {
 };
 
 export const updateMovie = (data: MovieObject, movieId: string) => {
-  return async function (dispatch: any) {
+  return async function (dispatch: AppDispatch) {
     try {
+      dispatch(movieActions.setMoviesLoading(true));
       const res = await axios.put(
         import.meta.env.VITE_CINEMA_MOVIES_API + "/" + movieId,
         data
@@ -53,11 +61,13 @@ export const updateMovie = (data: MovieObject, movieId: string) => {
       if (res.status === 200) {
         if (res.data.movie) {
           dispatch(movieActions.replaceMovie(res.data.movie as MovieObject));
-          dispatch(errorsActions.clearMovieError);
+          dispatch(movieActions.setMoviesError(null));
         }
       }
+      dispatch(movieActions.setMoviesLoading(false));
     } catch (error) {
-      dispatch(errorsActions.setMovieError("Failed to update movie"));
+      dispatch(movieActions.setMoviesLoading(false));
+      dispatch(movieActions.setMoviesError("Failed to update movie"));
       //eslint-disable-next-line no-console
       console.log(error);
     }
@@ -65,17 +75,25 @@ export const updateMovie = (data: MovieObject, movieId: string) => {
 };
 
 export const deleteMovie = (movieId: string) => {
-  return async function (dispatch: any) {
+  return async function (dispatch: AppDispatch) {
     try {
+      dispatch(movieActions.setMoviesLoading(true));
       const res = await axios.delete(
         import.meta.env.VITE_CINEMA_MOVIES_API + "/" + movieId
       );
       if (res.status === 200) {
-        dispatch(movieActions.deleteMovie(movieId));
-        dispatch(errorsActions.clearMovieError);
+        const data = res.data as {
+          movieId: MovieObject["_id"];
+          //TODO: Add subscriptions
+          subscriptions: SubscriptionObject[];
+        };
+        dispatch(movieActions.deleteMovie(data.movieId!));
+        dispatch(movieActions.setMoviesError(null));
       }
+      dispatch(movieActions.setMoviesLoading(false));
     } catch (error) {
-      dispatch(errorsActions.setMovieError("Failed to delete movie"));
+      dispatch(movieActions.setMoviesLoading(false));
+      dispatch(movieActions.setMoviesError("Failed to delete movie"));
       //eslint-disable-next-line no-console
       console.log(error);
     }

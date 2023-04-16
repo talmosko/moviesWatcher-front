@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import errorsSlice from "./errors-slice";
 
 import membersSlice from "./members-slice";
 import moviesSlice from "./movies-slice";
+import subscriptionSlice from "./subscriptions-slice";
 
 const store = configureStore({
   reducer: {
     members: membersSlice.reducer,
     movies: moviesSlice.reducer,
-    errors: errorsSlice.reducer,
+    subscriptions: subscriptionSlice.reducer,
   },
 });
 

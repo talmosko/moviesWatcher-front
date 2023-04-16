@@ -18,7 +18,7 @@ const MemberForm = ({ member }: MemberFormProps) => {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { memberError: submitError } = useAppSelector((state) => state.errors);
+  const { error: submitError } = useAppSelector((state) => state.members);
 
   const { register, handleSubmit, formState } = useForm<MemberObject>({
     defaultValues: isEdit ? member : undefined,

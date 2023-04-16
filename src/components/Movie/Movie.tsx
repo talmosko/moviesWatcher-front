@@ -28,9 +28,10 @@ const Movie = ({ movie }: { movie: MovieObject }) => {
           4
         )}`}</CardTitle>
         <CardSubTitle>{movie.genres?.join(", ")}</CardSubTitle>
-        {movie.subscriptions?.map((subscription) => (
+        //TODO: Add subscriptions
+        {/* {movie.subscriptions?.map((subscription) => (
           <p key={subscription._id}>{subscription.memberId.name}</p>
-        ))}
+        ))} */}
         <EntityButtons onEdit={handleEdit} onDelete={handleDelete} />
       </div>
     </Card>

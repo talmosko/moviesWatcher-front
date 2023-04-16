@@ -1,13 +1,5 @@
 import { z } from "zod";
 
-export const MovieSubscriptionSchema = z.object({
-  _id: z.string().optional(),
-  memberId: z.object({ _id: z.string(), name: z.string() }),
-  date: z.string(),
-});
-
-export type MovieSubscriptionObject = z.infer<typeof MovieSubscriptionSchema>;
-
 export const MovieSchema = z.object({
   _id: z.string().optional(),
   externalId: z.number().optional(),
@@ -15,7 +7,6 @@ export const MovieSchema = z.object({
   genres: z.array(z.string()).nonempty("Required"),
   image: z.string().nonempty("Required"),
   premiered: z.string().nonempty("Required"),
-  subscriptions: z.array(MovieSubscriptionSchema).optional(),
 });
 
 export type MovieObject = z.infer<typeof MovieSchema>;

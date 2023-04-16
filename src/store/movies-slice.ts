@@ -3,10 +3,14 @@ import { MovieObject } from "../types/movieTypes";
 
 interface MoviesState {
   movies: MovieObject[];
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: MoviesState = {
   movies: [],
+  loading: false,
+  error: null,
 };
 
 const moviesSlice = createSlice({
@@ -35,6 +39,12 @@ const moviesSlice = createSlice({
         const index = state.movies.findIndex((m) => m._id === movie._id);
         state.movies[index] = movie;
       }
+    },
+    setMoviesLoading(state, action) {
+      state.loading = action.payload;
+    },
+    setMoviesError(state, action) {
+      state.error = action.payload;
     },
   },
 });

@@ -3,10 +3,14 @@ import { MemberObject } from "../types/memberTypes";
 
 interface MembersState {
   members: MemberObject[];
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: MembersState = {
   members: [],
+  loading: false,
+  error: null,
 };
 
 const membersSlice = createSlice({
@@ -35,6 +39,12 @@ const membersSlice = createSlice({
         const index = state.members.findIndex((m) => m._id === member._id);
         state.members[index] = member;
       }
+    },
+    setMembersLoading(state, action) {
+      state.loading = action.payload;
+    },
+    setMembersError(state, action) {
+      state.error = action.payload;
     },
   },
 });

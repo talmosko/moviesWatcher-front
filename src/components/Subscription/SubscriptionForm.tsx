@@ -30,7 +30,6 @@ const SubscriptionForm = () => {
         method: "POST",
         data,
       });
-      console.log(res);
 
       if (res.status === 200 || res.status === 201) {
         navigate("/members", { replace: true });
