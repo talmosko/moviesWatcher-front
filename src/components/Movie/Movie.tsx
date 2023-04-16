@@ -1,32 +1,20 @@
-import axios from "axios";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { MovieObject } from "../../types/movieTypes";
 import Card, { CardSubTitle, CardTitle } from "../UI/Card";
 import EntityButtons from "../UI/EntityButtons";
+import { useAppDispatch } from "../../hooks/store-hooks";
+import { deleteMovie } from "../../store/movie-actions";
 
 const Movie = ({ movie }: { movie: MovieObject }) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleEdit = () => {
     navigate(`/movies/${movie._id}`);
   };
 
-  const handleDelete = async () => {
-    try {
-      const address = `${import.meta.env.VITE_CINEMA_MOVIES_API}/${movie._id}`;
-      const res = await axios.delete(address);
-      if (res.status === 200) {
-        //TODO: something more elegant with store
-        navigate(0);
-      } else {
-        //eslint-disable-next-line no-console
-        console.log(res);
-      }
-    } catch (error) {
-      //eslint-disable-next-line no-console
-      console.log(error);
-    }
+  const handleDelete = () => {
+    dispatch(deleteMovie(movie._id!));
   };
 
   return (

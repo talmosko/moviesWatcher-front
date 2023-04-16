@@ -5,7 +5,7 @@ export const MemberSubscriptionSchema = z.object({
     .array(
       z.object({
         movieId: z.object({ _id: z.string(), name: z.string() }),
-        date: z.date(),
+        date: z.string(),
       })
     )
     .optional(),

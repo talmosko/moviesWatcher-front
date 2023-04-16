@@ -1,35 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Movie from "../../components/Movie/Movie";
-import axios from "axios";
-import { MovieObject } from "../../types/movieTypes";
+import { useAppDispatch, useAppSelector } from "../../hooks/store-hooks";
+import { RootState } from "../../store/index";
+import { getAllMovies } from "../../store/movie-actions";
+
 const MoviesPage = () => {
-  //TODO : store
-  const [movies, setMovies] = useState<MovieObject[]>([]);
-  const [hasGetMoviesError, setHasGetMoviesError] = useState<boolean>(false);
+  const { movies } = useAppSelector((state: RootState) => state.movies);
+  const { movieError } = useAppSelector((state: RootState) => state.errors);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const res = await axios.get(import.meta.env.VITE_CINEMA_MOVIES_API);
-        if (res.status === 200) {
-          if (res.data.movies) {
-            let movies: MovieObject[] = res.data.movies.map(
-              (movie: MovieObject) => {
-                return movie;
-              }
-            );
-            setMovies(movies as MovieObject[]);
-          }
-        }
-      } catch (error) {
-        setHasGetMoviesError(true);
-        //eslint-disable-next-line no-console
-        console.log(error);
-      }
-    };
-
-    fetchMovies();
-  }, []);
+    dispatch(getAllMovies());
+  }, [dispatch]);
 
   return (
     <>
@@ -37,9 +19,9 @@ const MoviesPage = () => {
         <h1>Movies</h1>
       </section>
       <section className="flex gap-4 flex-wrap">
-        {!hasGetMoviesError &&
+        {!movieError &&
           movies.map((movie) => <Movie key={movie._id} movie={movie} />)}
-        {hasGetMoviesError && <p>There was an error getting users</p>}
+        {!!movieError && <p>There was an error getting users</p>}
       </section>
     </>
   );

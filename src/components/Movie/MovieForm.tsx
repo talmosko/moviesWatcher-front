@@ -1,19 +1,21 @@
 import { Controller, useForm } from "react-hook-form";
 import Button from "../UI/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import ErrorMessage from "../UI/ErrorMessage";
 import Card from "../UI/Card";
 import { MovieObject, MovieSchema } from "../../types/movieTypes";
 import FormField from "../UI/FormField";
+import { useAppDispatch, useAppSelector } from "../../hooks/store-hooks";
+import { addMovie, updateMovie } from "../../store/movie-actions";
 
 const MovieForm = ({ movie }: { movie?: MovieObject }) => {
   const isEdit = !!movie;
 
   const navigate = useNavigate();
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const { movieError: submitError } = useAppSelector((state) => state.errors);
+
   const { register, handleSubmit, formState, control, watch } =
     useForm<MovieObject>({
       defaultValues: isEdit
@@ -25,27 +27,17 @@ const MovieForm = ({ movie }: { movie?: MovieObject }) => {
       resolver: zodResolver(MovieSchema),
       mode: "all",
     });
+
   const { errors } = formState;
-  const onSubmit = async (data: MovieObject) => {
-    const address = `${import.meta.env.VITE_CINEMA_MOVIES_API}${
-      isEdit ? `/${movie?._id}` : ""
-    }`;
-    try {
-      const res = await axios(address, {
-        method: isEdit ? "PUT" : "POST",
-        data: { ...data, genres: data.genres?.filter((genre) => genre !== "") },
-      });
-      if (res.status === 200 || res.status === 201) {
-        navigate("/movies", { replace: true });
-      } else {
-        //eslint-disable-next-line no-console
-        console.log(res);
-        setSubmitError("There was an error submitting the form");
-      }
-    } catch (error) {
-      //eslint-disable-next-line no-console
-      console.log(error);
-      setSubmitError("There was an error submitting the form");
+
+  const onSubmit = (data: MovieObject) => {
+    if (isEdit) {
+      dispatch(updateMovie(data, movie?._id as string));
+    } else {
+      dispatch(addMovie(data));
+    }
+    if (!submitError) {
+      navigate("/movies", { replace: true });
     }
   };
 

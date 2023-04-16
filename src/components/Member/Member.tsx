@@ -1,34 +1,21 @@
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../hooks/store-hooks";
 import { MemberObject } from "../../types/memberTypes";
 import SubscriptionForm from "../Subscription/SubscriptionForm";
 import Card, { CardSubTitle, CardTitle } from "../UI/Card";
 import EntityButtons from "../UI/EntityButtons";
+import { deleteMember } from "../../store/member-actions";
 
 const Member: React.FC<{ member: MemberObject }> = ({ member }) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleEdit = () => {
     navigate(`/members/${member._id}`);
   };
 
-  const handleDelete = async () => {
-    try {
-      const address = `${import.meta.env.VITE_CINEMA_MEMBERS_API}/${
-        member._id
-      }`;
-      const res = await axios.delete(address);
-      if (res.status === 200) {
-        //TODO: something more elegant with store
-        navigate(0);
-      } else {
-        //eslint-disable-next-line no-console
-        console.log(res);
-      }
-    } catch (error) {
-      //eslint-disable-next-line no-console
-      console.log(error);
-    }
+  const handleDelete = () => {
+    dispatch(deleteMember(member._id!));
   };
 
   return (
