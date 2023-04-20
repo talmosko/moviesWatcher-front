@@ -2,6 +2,7 @@ import axios from "axios";
 import { MovieObject } from "../types/movieTypes";
 import { movieActions } from "./movies-slice";
 import { SubscriptionObject } from "../types/subscriptionTypes";
+import { subscriptionActions } from "./subscriptions-slice";
 import { AppDispatch } from ".";
 
 export const getAllMovies = () => {
@@ -84,10 +85,10 @@ export const deleteMovie = (movieId: string) => {
       if (res.status === 200) {
         const data = res.data as {
           movieId: MovieObject["_id"];
-          //TODO: Add subscriptions
           subscriptions: SubscriptionObject[];
         };
         dispatch(movieActions.deleteMovie(data.movieId!));
+        dispatch(subscriptionActions.replaceSubscriptions(data.subscriptions));
         dispatch(movieActions.setMoviesError(null));
       }
       dispatch(movieActions.setMoviesLoading(false));

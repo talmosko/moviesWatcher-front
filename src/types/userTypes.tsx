@@ -53,3 +53,10 @@ export const UserSchema = z.object({
 });
 
 export type UserObject = z.infer<typeof UserSchema>;
+
+export const AuthSchema = z.object({
+  userName: z.string().email("Invalid email").nonempty("Required"),
+  password: z.string().nonempty(),
+});
+
+export type AuthObject = z.infer<typeof AuthSchema>;

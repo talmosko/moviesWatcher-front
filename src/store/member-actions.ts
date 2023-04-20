@@ -1,7 +1,7 @@
 import axios from "axios";
 import { MemberObject } from "../types/memberTypes";
 import { memberActions } from "./members-slice";
-import { SubscriptionObject } from "../types/subscriptionTypes";
+import { subscriptionActions } from "./subscriptions-slice";
 import { AppDispatch } from ".";
 
 export const getAllMembers = () => {
@@ -87,10 +87,9 @@ export const deleteMember = (memberId: string) => {
       if (res.status === 200) {
         const data = res.data as {
           memberId: MemberObject["_id"];
-          //TODO: add subscriptions
-          subscriptions: SubscriptionObject["_id"][];
         };
         dispatch(memberActions.deleteMember(data.memberId));
+        dispatch(subscriptionActions.deleteSubscriptionsForMember(memberId));
         dispatch(memberActions.setMembersError(null));
       }
       dispatch(memberActions.setMembersLoading(false));

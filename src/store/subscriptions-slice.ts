@@ -37,14 +37,13 @@ const subscriptionSlice = createSlice({
       );
       state.subscriptions.splice(index, 1);
     },
-    deleteSubscriptions(state, action) {
-      const subscriptionIds: string[] = action.payload;
-      for (let subscriptionId of subscriptionIds) {
-        const index = state.subscriptions.findIndex(
-          (s) => s._id === subscriptionId
-        );
-        state.subscriptions.splice(index, 1);
-      }
+    deleteSubscriptionsForMember(state, action) {
+      const memberId: string = action.payload;
+
+      const index = state.subscriptions.findIndex(
+        (s) => s.memberId._id === memberId
+      );
+      state.subscriptions.splice(index, 1);
     },
     replaceSubscriptions(state, action) {
       const subscriptions: SubscriptionObject[] = action.payload;

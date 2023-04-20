@@ -1,6 +1,10 @@
 import "./index.css";
 import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  ActionFunction,
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import RootLayout from "./pages/RootLayout";
 import UsersPage from "./pages/User/UsersPage";
@@ -14,7 +18,9 @@ import MemberDetails, {
   memberDetailsLoader,
 } from "./pages/Member/MemberDetails";
 import AddMember from "./pages/Member/AddMember";
-
+import AuthPage from "./pages/Auth/AuthPage";
+import Logout, { logoutAction } from "./pages/Auth/Logout";
+import { action as authAction } from "./pages/Auth/AuthPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -24,6 +30,19 @@ const router = createBrowserRouter([
         index: true,
         element: <HomePage />,
       },
+
+      { path: "logout", element: <Logout />, action: logoutAction },
+      {
+        path: "login",
+        element: <AuthPage isSignup={false} />,
+        action: authAction,
+      },
+      {
+        path: "signup",
+        element: <AuthPage isSignup={true} />,
+        action: authAction,
+      },
+
       {
         path: "/users",
         children: [

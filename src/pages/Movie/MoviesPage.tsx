@@ -22,7 +22,7 @@ const MoviesPage = () => {
       <section className="flex gap-4 flex-wrap">
         {!moviesError &&
           movies.map((movie) => <Movie key={movie._id} movie={movie} />)}
-        {!!moviesError && <p>There was an error getting users</p>}
+        {!!moviesError && <p>There was an error getting movies</p>}
       </section>
     </>
   );

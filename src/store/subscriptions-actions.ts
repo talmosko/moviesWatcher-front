@@ -1,6 +1,9 @@
 import axios from "axios";
 import { AppDispatch } from ".";
-import { SubscriptionObject } from "../types/subscriptionTypes";
+import {
+  SubscriptionInputObject,
+  SubscriptionObject,
+} from "../types/subscriptionTypes";
 import { subscriptionActions } from "./subscriptions-slice";
 
 export const getAllSubscriptions = () => {
@@ -10,7 +13,10 @@ export const getAllSubscriptions = () => {
       const response = await axios.get(
         import.meta.env.VITE_CINEMA_SUBSCRIPTIONS_API
       );
-      const subscriptions = response.data;
+
+      const { subscriptions }: { subscriptions: SubscriptionObject[] } =
+        response.data;
+
       dispatch(subscriptionActions.replaceAllSubscriptions(subscriptions));
       dispatch(subscriptionActions.setSubscriptionsError(null));
       dispatch(subscriptionActions.setSubscriptionsLoading(false));
@@ -23,7 +29,7 @@ export const getAllSubscriptions = () => {
   };
 };
 
-export const addSubscription = (data: SubscriptionObject) => {
+export const postSubscription = (data: SubscriptionInputObject) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(subscriptionActions.setSubscriptionsLoading(true));

@@ -1,10 +1,7 @@
 import { useForm } from "react-hook-form";
-
 import Button from "../UI/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { postSubscription } from "../../store/subscriptions-actions";
 import ErrorMessage from "../UI/ErrorMessage";
 import Card from "../UI/Card";
 import FormField from "../UI/FormField";
@@ -12,11 +9,12 @@ import {
   SubscriptionInputObject,
   SubscriptionInputSchema,
 } from "../../types/subscriptionTypes";
+import { useAppDispatch, useAppSelector } from "../../hooks/store-hooks";
 
 const SubscriptionForm = () => {
-  const navigate = useNavigate();
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const { register, handleSubmit, formState } =
+  const dispatch = useAppDispatch();
+  const { error: submitError } = useAppSelector((state) => state.subscriptions);
+  const { register, handleSubmit, formState, reset } =
     useForm<SubscriptionInputObject>({
       resolver: zodResolver(SubscriptionInputSchema),
       mode: "all",
@@ -24,23 +22,10 @@ const SubscriptionForm = () => {
   const { errors } = formState;
 
   const onSubmit = async (data: SubscriptionInputObject) => {
-    const address = import.meta.env.VITE_CINEMA_SUBSCRIPTIONS_API;
-    try {
-      const res = await axios(address, {
-        method: "POST",
-        data,
-      });
-
-      if (res.status === 200 || res.status === 201) {
-        navigate("/members", { replace: true });
-      } else {
-        //eslint-disable-next-line no-console
-        setSubmitError("There was an error submitting the form");
-      }
-    } catch (error) {
-      //eslint-disable-next-line no-console
-      console.log(error);
-      setSubmitError("There was an error submitting the form");
+    dispatch(postSubscription(data));
+    if (!submitError) {
+      reset();
+      //TODO: close subscription form
     }
   };
   return (
@@ -73,7 +58,8 @@ const SubscriptionForm = () => {
           <Button type="submit">Save</Button>
           <Button
             type="button"
-            onClick={() => navigate("/members", { replace: true })}
+            // TODO: close subscription form
+            // onClick={() => navigate("/members", { replace: true })}
           >
             Cancel
           </Button>

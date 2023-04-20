@@ -3,6 +3,7 @@ import Member from "../../components/Member/Member";
 import { useAppDispatch, useAppSelector } from "../../hooks/store-hooks";
 import { RootState } from "../../store";
 import { getAllMembers } from "../../store/member-actions";
+import { getAllSubscriptions } from "../../store/subscriptions-actions";
 
 const MembersPage = () => {
   const { members, error: membersError } = useAppSelector(
@@ -12,6 +13,7 @@ const MembersPage = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getAllMembers());
+    dispatch(getAllSubscriptions());
   }, [dispatch]);
 
   return (
