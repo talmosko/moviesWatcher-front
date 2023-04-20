@@ -11,7 +11,10 @@ export const getAllSubscriptions = () => {
     dispatch(subscriptionActions.setSubscriptionsLoading(true));
     try {
       const response = await axios.get(
-        import.meta.env.VITE_CINEMA_SUBSCRIPTIONS_API
+        import.meta.env.VITE_CINEMA_SUBSCRIPTIONS_API,
+        {
+          withCredentials: true,
+        }
       );
 
       const { subscriptions }: { subscriptions: SubscriptionObject[] } =
@@ -35,7 +38,10 @@ export const postSubscription = (data: SubscriptionInputObject) => {
       dispatch(subscriptionActions.setSubscriptionsLoading(true));
       const response = await axios.post(
         import.meta.env.VITE_CINEMA_SUBSCRIPTIONS_API,
-        data
+        data,
+        {
+          withCredentials: true,
+        }
       );
       const subscription = response.data;
       dispatch(subscriptionActions.addSubscription(subscription));

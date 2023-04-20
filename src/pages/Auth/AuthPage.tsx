@@ -19,7 +19,6 @@ export async function action({ request }: { request: Request }) {
     password: data.get("password"),
     isSignup: data.get("isSignup"),
   };
-  console.log(authData);
   const { userName, password, isSignup } = authData;
 
   const mode = isSignup === "true" ? "signup" : "login";
@@ -34,7 +33,6 @@ export async function action({ request }: { request: Request }) {
       withCredentials: true,
     });
 
-    console.log(response.data);
     if (isSignup === "true") return redirect("/login");
 
     const { permissions, sessionTimeout } = response.data;
@@ -46,7 +44,6 @@ export async function action({ request }: { request: Request }) {
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
       if (error.response.status === 422 || error.response.status === 401) {
-        console.log(error.response.data);
         return error.response.data;
       }
     } else

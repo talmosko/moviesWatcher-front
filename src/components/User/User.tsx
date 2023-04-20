@@ -14,7 +14,9 @@ const User: React.FC<{ user: UserObject }> = ({ user }) => {
   const handleDelete = async () => {
     try {
       const address = `${import.meta.env.VITE_CINEMA_USERS_API}/${user._id}`;
-      const res = await axios.delete(address);
+      const res = await axios.delete(address, {
+        withCredentials: true,
+      });
       if (res.status === 200) {
         //TODO: something more elegant with store
         navigate(0);

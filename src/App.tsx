@@ -21,10 +21,13 @@ import AddMember from "./pages/Member/AddMember";
 import AuthPage from "./pages/Auth/AuthPage";
 import Logout, { logoutAction } from "./pages/Auth/Logout";
 import { action as authAction } from "./pages/Auth/AuthPage";
+import { authLoader, getSessionTimeout } from "./utils/auth";
+import { AllPermissionsDict } from "./types/userTypes";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    loader: getSessionTimeout,
     children: [
       {
         index: true,
@@ -45,34 +48,64 @@ const router = createBrowserRouter([
 
       {
         path: "/users",
+        loader: authLoader(AllPermissionsDict.SiteAdmin),
         children: [
           { index: true, element: <UsersPage /> },
-          { path: ":id", loader: userDetailsLoader, element: <UserDetails /> },
-          { path: "new", element: <AddUser /> },
+          {
+            path: ":id",
+            loader: userDetailsLoader,
+            element: <UserDetails />,
+          },
+          {
+            path: "new",
+            element: <AddUser />,
+          },
         ],
       },
       {
         path: "/movies",
         children: [
-          { index: true, element: <MoviesPage /> },
+          {
+            index: true,
+            element: <MoviesPage />,
+            loader: authLoader(AllPermissionsDict.ViewMovies),
+          },
           {
             path: ":id",
-            loader: movieDetailsLoader,
+            loader: authLoader(
+              AllPermissionsDict.UpdateMovies,
+              movieDetailsLoader
+            ),
             element: <MovieDetails />,
           },
-          { path: "new", element: <AddMovie /> },
+          {
+            path: "new",
+            element: <AddMovie />,
+            loader: authLoader(AllPermissionsDict.CreateMovies),
+          },
         ],
       },
       {
         path: "/members",
         children: [
-          { index: true, element: <MembersPage /> },
+          {
+            index: true,
+            element: <MembersPage />,
+            loader: authLoader(AllPermissionsDict.ViewSubscriptions),
+          },
           {
             path: ":id",
-            loader: memberDetailsLoader,
+            loader: authLoader(
+              AllPermissionsDict.CreateSubscriptions,
+              memberDetailsLoader
+            ),
             element: <MemberDetails />,
           },
-          { path: "new", element: <AddMember /> },
+          {
+            path: "new",
+            element: <AddMember />,
+            loader: authLoader(AllPermissionsDict.CreateSubscriptions),
+          },
         ],
       },
     ],

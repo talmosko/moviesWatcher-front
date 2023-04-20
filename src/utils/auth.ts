@@ -1,4 +1,4 @@
-import { redirect } from "react-router-dom";
+import { LoaderFunction, LoaderFunctionArgs, redirect } from "react-router-dom";
 import { PermissionType } from "../types/userTypes";
 
 export function getSessionTimeout() {
@@ -16,13 +16,21 @@ export function getPermissions() {
 }
 
 //generic auth loader
-export const authLoader = (permission: PermissionType) => {
-  return () => {
+export const authLoader = (
+  permission: PermissionType,
+  nextLoader?: LoaderFunction
+) => {
+  return async (args: LoaderFunctionArgs) => {
+    console.log("authLoader", permission);
     //get permissions from local storage
     const permissions = getPermissions();
-
+    console.log("permissions", permissions);
     if (!permissions || !permissions.includes(permission)) {
-      redirect("/login");
+      return redirect("/login");
     }
+
+    if (nextLoader) return await nextLoader(args);
+
+    return {};
   };
 };

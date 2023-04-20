@@ -9,7 +9,9 @@ export const getAllMovies = () => {
   return async function (dispatch: AppDispatch) {
     try {
       dispatch(movieActions.setMoviesLoading(true));
-      const res = await axios.get(import.meta.env.VITE_CINEMA_MOVIES_API);
+      const res = await axios.get(import.meta.env.VITE_CINEMA_MOVIES_API, {
+        withCredentials: true,
+      });
       if (res.status === 200) {
         if (res.data.movies) {
           let movies: MovieObject[] = res.data.movies;
@@ -33,7 +35,10 @@ export const addMovie = (data: MovieObject) => {
       dispatch(movieActions.setMoviesLoading(true));
       const res = await axios.post(
         import.meta.env.VITE_CINEMA_MOVIES_API,
-        data
+        data,
+        {
+          withCredentials: true,
+        }
       );
       if (res.status === 200) {
         if (res.data.movie) {
@@ -57,7 +62,10 @@ export const updateMovie = (data: MovieObject, movieId: string) => {
       dispatch(movieActions.setMoviesLoading(true));
       const res = await axios.put(
         import.meta.env.VITE_CINEMA_MOVIES_API + "/" + movieId,
-        data
+        data,
+        {
+          withCredentials: true,
+        }
       );
       if (res.status === 200) {
         if (res.data.movie) {
@@ -80,7 +88,10 @@ export const deleteMovie = (movieId: string) => {
     try {
       dispatch(movieActions.setMoviesLoading(true));
       const res = await axios.delete(
-        import.meta.env.VITE_CINEMA_MOVIES_API + "/" + movieId
+        import.meta.env.VITE_CINEMA_MOVIES_API + "/" + movieId,
+        {
+          withCredentials: true,
+        }
       );
       if (res.status === 200) {
         const data = res.data as {
@@ -102,5 +113,7 @@ export const deleteMovie = (movieId: string) => {
 };
 
 export const getMovieResolver = (movieId: string | undefined) => {
-  return axios.get(import.meta.env.VITE_CINEMA_MOVIES_API + "/" + movieId);
+  return axios.get(import.meta.env.VITE_CINEMA_MOVIES_API + "/" + movieId, {
+    withCredentials: true,
+  });
 };

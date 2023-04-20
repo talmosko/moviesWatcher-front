@@ -8,7 +8,9 @@ export const getAllMembers = () => {
   return async function (dispatch: AppDispatch) {
     try {
       dispatch(memberActions.setMembersLoading(true));
-      const res = await axios.get(import.meta.env.VITE_CINEMA_MEMBERS_API);
+      const res = await axios.get(import.meta.env.VITE_CINEMA_MEMBERS_API, {
+        withCredentials: true,
+      });
       if (res.status === 200) {
         if (res.data.members) {
           let members: MemberObject[] = res.data.members;
@@ -33,7 +35,10 @@ export const addMember = (data: MemberObject) => {
       dispatch(memberActions.setMembersLoading(true));
       const res = await axios.post(
         import.meta.env.VITE_CINEMA_MEMBERS_API,
-        data
+        data,
+        {
+          withCredentials: true,
+        }
       );
       if (res.status === 200) {
         if (res.data.member) {
@@ -57,7 +62,10 @@ export const updateMember = (data: MemberObject, memberId: string) => {
       dispatch(memberActions.setMembersLoading(true));
       const res = await axios.put(
         import.meta.env.VITE_CINEMA_MEMBERS_API + "/" + memberId,
-        data
+        data,
+        {
+          withCredentials: true,
+        }
       );
       if (res.status === 200) {
         if (res.data.member) {
@@ -82,7 +90,10 @@ export const deleteMember = (memberId: string) => {
     try {
       dispatch(memberActions.setMembersLoading(true));
       const res = await axios.delete(
-        import.meta.env.VITE_CINEMA_MEMBERS_API + "/" + memberId
+        import.meta.env.VITE_CINEMA_MEMBERS_API + "/" + memberId,
+        {
+          withCredentials: true,
+        }
       );
       if (res.status === 200) {
         const data = res.data as {
@@ -103,5 +114,7 @@ export const deleteMember = (memberId: string) => {
 };
 
 export const getMemberResolver = (memberId: string | undefined) => {
-  return axios.get(import.meta.env.VITE_CINEMA_MEMBERS_API + "/" + memberId);
+  return axios.get(import.meta.env.VITE_CINEMA_MEMBERS_API + "/" + memberId, {
+    withCredentials: true,
+  });
 };

@@ -17,27 +17,31 @@ const AuthForm = ({ isSignup }: { isSignup: boolean }) => {
   const navigation = useNavigation();
   const submit = useSubmit();
   const isSubmitting = navigation.state === "submitting";
-  const { register, formState } = useForm<AuthObject>({
+  const { register, formState, handleSubmit, reset } = useForm<AuthObject>({
     resolver: zodResolver(AuthSchema),
     mode: "all",
   });
 
-  const { errors, isValid } = formState;
+  const { errors } = formState;
+
+  const onSubmit = (formData: AuthObject) => {
+    submit(
+      { ...formData, isSignup: `${isSignup}` },
+      { method: "post", replace: true }
+    );
+
+    reset();
+  };
 
   return (
     <Card className="w-3/5 flex-col">
       <h1>{isSignup ? "Create a new user" : "Log in"}</h1>
-      {data && data.errors && (
-        <ErrorMessage>
-          {Object.values(data.errors).map((err) => (
-            <li key={err}>{err}</li>
-          ))}
-        </ErrorMessage>
-      )}
+
       {data && data.message && <ErrorMessage>{data.message}</ErrorMessage>}
-      <Form
-        method="post"
+
+      <form
         className="flex flex-wrap gap-2 flex-col rounded-md bg-white"
+        onSubmit={handleSubmit(onSubmit)}
       >
         <FormField
           htmlFor="userName"
@@ -53,14 +57,12 @@ const AuthForm = ({ isSignup }: { isSignup: boolean }) => {
           errors={errors}
         />
 
-        <input type="hidden" name="isSignup" value={`${isSignup}`} />
-
         <div className="flex flex-wrap gap-2 mt-4">
-          <Button type="submit" disabled={isSubmitting || !isValid}>
+          <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Submitting" : isSignup ? "Sign Up" : "Login"}
           </Button>
         </div>
-      </Form>
+      </form>
     </Card>
   );
 };

@@ -6,10 +6,7 @@ export default function Logout() {
 }
 
 export async function logoutAction() {
-  console.log("logout");
-
   try {
-    console.log("logout");
     await axios.post(
       `${import.meta.env.VITE_CINEMA_API}/logout`,
       {},

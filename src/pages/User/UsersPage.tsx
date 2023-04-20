@@ -9,7 +9,9 @@ const UsersPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get(import.meta.env.VITE_CINEMA_USERS_API);
+        const res = await axios.get(import.meta.env.VITE_CINEMA_USERS_API, {
+          withCredentials: true,
+        });
         if (res.status === 200) {
           if (res.data.users) {
             let users: UserObject[] = res.data.users.map((user: UserObject) => {

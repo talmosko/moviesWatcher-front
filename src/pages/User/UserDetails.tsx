@@ -34,6 +34,8 @@ export default function UserDetails() {
 export function userDetailsLoader(args: LoaderFunctionArgs) {
   const { id } = args.params;
   return defer({
-    user: axios.get(import.meta.env.VITE_CINEMA_USERS_API + `/${id}`),
+    user: axios.get(import.meta.env.VITE_CINEMA_USERS_API + `/${id}`, {
+      withCredentials: true,
+    }),
   });
 }

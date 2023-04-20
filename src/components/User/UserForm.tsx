@@ -41,6 +41,7 @@ const UserForm = (props: UserFormProps) => {
       const res = await axios(address, {
         method: isEdit ? "PUT" : "POST",
         data,
+        withCredentials: true,
       });
       if (res.status === 200 || res.status === 201) {
         navigate("/users", { replace: true });
