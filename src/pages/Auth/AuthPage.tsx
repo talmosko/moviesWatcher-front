@@ -5,7 +5,7 @@ import AuthForm from "../../components/Auth/AuthForm";
 const AuthPage = ({ isSignup }: { isSignup: boolean }) => {
   return (
     <>
-      <AuthForm isSignup={isSignup} />;
+      <AuthForm isSignup={isSignup} />
     </>
   );
 };
