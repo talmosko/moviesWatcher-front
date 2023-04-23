@@ -1,10 +1,6 @@
 import "./index.css";
 import "./App.css";
-import {
-  ActionFunction,
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import RootLayout from "./pages/RootLayout";
 import UsersPage from "./pages/User/UsersPage";

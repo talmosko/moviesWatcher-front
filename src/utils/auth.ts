@@ -21,14 +21,13 @@ export const authLoader = (
   nextLoader?: LoaderFunction
 ) => {
   return async (args: LoaderFunctionArgs) => {
-    console.log("authLoader", permission);
     //get permissions from local storage
     const permissions = getPermissions();
-    console.log("permissions", permissions);
     if (!permissions || !permissions.includes(permission)) {
       return redirect("/login");
     }
 
+    //sending nextLoader
     if (nextLoader) return await nextLoader(args);
 
     return {};
