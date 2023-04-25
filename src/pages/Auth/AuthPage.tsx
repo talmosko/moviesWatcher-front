@@ -4,8 +4,10 @@ import AuthForm from "../../components/Auth/AuthForm";
 import PageLayout from "../PageLayout";
 
 const AuthPage = ({ isSignup }: { isSignup: boolean }) => {
+  const pageTitle = isSignup ? "Create New User" : "Login";
+
   return (
-    <PageLayout pageTitle={isSignup ? "Create New User" : "Login"}>
+    <PageLayout pageTitle={pageTitle}>
       <AuthForm isSignup={isSignup} />
     </PageLayout>
   );

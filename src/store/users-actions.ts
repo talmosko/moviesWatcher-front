@@ -68,7 +68,6 @@ export const updateUser = (data: UserObject, userId: string) => {
       );
       if (res.status === 200) {
         if (res.data.user) {
-          console.log(res.data.user);
           dispatch(userActions.replaceUser(res.data.user as UserObject));
           dispatch(userActions.setUsersError(null));
         }

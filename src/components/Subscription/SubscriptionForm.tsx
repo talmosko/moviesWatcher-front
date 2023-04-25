@@ -4,55 +4,60 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { postSubscription } from "../../store/subscriptions-actions";
 import ErrorMessage from "../UI/ErrorMessage";
 import Card from "../UI/Card";
-import FormField, { FieldLabel } from "../UI/FormField";
+import FormField from "../UI/FormField";
 import {
   SubscriptionInputObject,
   SubscriptionInputSchema,
+  SubscriptionObject,
 } from "../../types/subscriptionTypes";
 import { useAppDispatch, useAppSelector } from "../../hooks/store-hooks";
 import Form from "../UI/Form";
 import CardButtons from "../UI/CardButtons";
 import Select from "../UI/Select";
+import Input from "../UI/Input";
+import { MovieObject } from "../../types/movieTypes";
+import { MemberObject } from "../../types/memberTypes";
 
-const SubscriptionForm = ({ memberId }: { memberId: string }) => {
+const SubscriptionForm = ({
+  memberId,
+  closeForm,
+}: {
+  memberId: string;
+  closeForm: () => void;
+}) => {
   const dispatch = useAppDispatch();
   const { error: submitError } = useAppSelector((state) => state.subscriptions);
+
   const { register, handleSubmit, formState, reset, control } =
     useForm<SubscriptionInputObject>({
       resolver: zodResolver(SubscriptionInputSchema),
+      defaultValues: { memberId: memberId },
       mode: "all",
     });
   const { errors } = formState;
-
   const onSubmit = async (data: SubscriptionInputObject) => {
     dispatch(postSubscription(data));
     if (!submitError) {
       reset();
-      //TODO: close subscription form
+      closeForm();
     }
   };
   return (
-    <Card className="w-3/5 flex-col">
+    <Card className="flex-col border-2 border-blue-900 ">
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <input type="hidden" value={memberId} {...register("memberId")} />
-
-        <FormField htmlFor="movieId" fieldLabel="movieId" errors={errors}>
-          <input type="text" {...register("movieId")} />
-        </FormField>
-
-        <MoviesControllerField control={control} errors={errors} />
+        <MoviesControllerField
+          control={control}
+          errors={errors}
+          memberId={memberId}
+        />
 
         <FormField htmlFor="date" fieldLabel="Date" errors={errors}>
-          <input type="date" {...register("date")} />
+          <Input type="date" {...register("date")} />
         </FormField>
 
         <CardButtons>
           <Button type="submit">Save</Button>
-          <Button
-            type="button"
-            // TODO: close subscription form
-            // onClick={() => navigate("/members", { replace: true })}
-          >
+          <Button type="button" onClick={closeForm}>
             Cancel
           </Button>
         </CardButtons>
@@ -65,10 +70,23 @@ const SubscriptionForm = ({ memberId }: { memberId: string }) => {
 const MoviesControllerField = ({
   control,
   errors,
+  memberId,
 }: {
   control: Control<SubscriptionInputObject, any>;
   errors: FieldErrors<SubscriptionInputObject>;
+  memberId: MemberObject["_id"];
 }) => {
+  const memberSubscriptions = useAppSelector((state) =>
+    state.subscriptions.subscriptions.find(
+      (sub) => sub.memberId._id === memberId
+    )
+  );
+  const { movies: allMovies } = useAppSelector((state) => state.movies);
+  const unsubscribedMovies = getUnsubscribedMovies(
+    allMovies,
+    memberSubscriptions
+  );
+
   return (
     <Controller
       control={control}
@@ -77,15 +95,29 @@ const MoviesControllerField = ({
         <FormField htmlFor="movieId" fieldLabel="Choose Movie" errors={errors}>
           <Select {...field} className="w-full">
             <option value="">Select Movie</option>
-            <option value="60b9e4f3c9e9b3a5c8e0e9b1">
-              The Shawshank Redemption
-            </option>
-            <option value="60b9e4f3c9e9b3a5c8e0e9b2">The Godfather</option>
-            <option value="60b9e4f3c9e9b3a5c8e0e9b3">The Dark Knight</option>
+            {unsubscribedMovies.map((movie) => (
+              <option key={movie._id} value={movie._id}>
+                {movie.name}
+              </option>
+            ))}
           </Select>
         </FormField>
       )}
     />
   );
 };
+
+const getUnsubscribedMovies = (
+  allMovies: MovieObject[],
+  memberSubscriptions: SubscriptionObject | undefined
+) => {
+  const memberMoviesIds = memberSubscriptions?.movies.map(
+    (movie) => movie.movieId._id
+  );
+  const unsubscribedMovies = allMovies.filter(
+    (movie) => !memberMoviesIds?.includes(movie._id)
+  );
+  return unsubscribedMovies;
+};
+
 export default SubscriptionForm;

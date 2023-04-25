@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { PageTitle } from "../components/UI/PageTitle";
 import Button from "../components/UI/Button";
 
@@ -10,6 +10,10 @@ type Props = {
 };
 
 const PageLayout = (props: Props) => {
+  useEffect(() => {
+    document.title = props.pageTitle;
+  }, [props.pageTitle]);
+
   return (
     <div className="flex flex-col gap-3">
       <section className="flex flex-row gap-3">

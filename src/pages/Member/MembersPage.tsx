@@ -5,22 +5,26 @@ import { getAllMembers } from "../../store/member-actions";
 import { getAllSubscriptions } from "../../store/subscriptions-actions";
 import PageLayout from "../PageLayout";
 import { useNavigate } from "react-router-dom";
+import { getAllMovies } from "../../store/movie-actions";
 
 const MembersPage = () => {
   const { members, error: membersError } = useAppSelector(
     (state) => state.members
   );
 
+  const pageTitle = "Members";
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getAllMembers());
     dispatch(getAllSubscriptions());
+    dispatch(getAllMovies());
   }, [dispatch]);
 
   return (
     <PageLayout
-      pageTitle="Members"
+      pageTitle={pageTitle}
       titleButtonLabel="+ Add"
       titleButtonOnClick={() => navigate("new")}
     >

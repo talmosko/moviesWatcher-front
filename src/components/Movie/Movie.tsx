@@ -1,10 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MovieObject } from "../../types/movieTypes";
 import Card, { CardSubTitle, CardTitle } from "../UI/Card";
 import EntityButtons from "../UI/CardButtons";
 import { useAppDispatch, useAppSelector } from "../../hooks/store-hooks";
 import { deleteMovie } from "../../store/movie-actions";
 import { SubscriptionForMovieObject } from "../../types/subscriptionTypes";
+import UnorderedList from "../UI/UnorderedList";
+import ListItem from "../UI/ListItem";
 
 const Movie = ({ movie }: { movie: MovieObject }) => {
   const navigate = useNavigate();
@@ -57,12 +59,21 @@ const SubscriptionsForMovie = ({
 
   return (
     <>
-      {subscriptionsForMovie &&
-        subscriptionsForMovie.map((subscription) => (
-          <p key={subscription._id}>
-            {subscription.memberId.name} {subscription.date}
-          </p>
-        ))}
+      <p>Subscriptions:</p>
+      <UnorderedList>
+        {subscriptionsForMovie &&
+          subscriptionsForMovie.map((sub) => (
+            <ListItem key={sub.memberId._id!}>
+              <Link
+                className="underline text-blue-800"
+                to={`/members/${sub.memberId._id!}`}
+              >
+                {sub.memberId.name}
+              </Link>
+              ,{new Date(sub.date).toLocaleDateString()}
+            </ListItem>
+          ))}
+      </UnorderedList>
     </>
   );
 };

@@ -2,8 +2,10 @@ import MemberForm from "../../components/Member/MemberForm";
 import PageLayout from "../PageLayout";
 
 const AddMember = () => {
+  const pageTitle = "Add New Member";
+
   return (
-    <PageLayout pageTitle="Add New Member">
+    <PageLayout pageTitle={pageTitle}>
       <MemberForm />
     </PageLayout>
   );

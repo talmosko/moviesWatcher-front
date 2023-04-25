@@ -50,7 +50,7 @@ const UserForm = (props: UserFormProps) => {
   };
 
   return (
-    <Card className="w-full flex-col">
+    <Card className="w-full sm:w-96 flex-col">
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormField htmlFor="firstName" fieldLabel="First Name" errors={errors}>
           <Input type="text" {...register("firstName")} />

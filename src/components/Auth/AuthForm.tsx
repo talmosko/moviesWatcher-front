@@ -23,7 +23,6 @@ const AuthForm = ({ isSignup }: { isSignup: boolean }) => {
   const { errors } = formState;
 
   const onSubmit = (formData: AuthObject) => {
-    console.log(formData);
     submit(
       { ...formData, isSignup: `${isSignup}` },
       { method: "post", replace: true }

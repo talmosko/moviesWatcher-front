@@ -9,16 +9,6 @@ type FieldProps = {
 }; // uncontrolled input
 
 const FormField = ({ htmlFor, fieldLabel, errors, children }: FieldProps) => {
-  let registerOptions = {
-    required: true,
-    // valueAsNumber: type === "number" ? true : undefined,
-  } as {
-    required: boolean;
-    valueAsNumber?: true | undefined;
-  };
-
-  //uncontrolled input : just register, controlled input: onChange and onBlur
-
   return (
     <div className="w-72 sm:w-80 grid grid-cols-2 grid-rows-2">
       <FieldLabel

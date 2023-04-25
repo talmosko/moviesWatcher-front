@@ -43,7 +43,7 @@ const MemberForm = ({ member }: MemberFormProps) => {
   };
 
   return (
-    <Card className="w-full sm:w-full">
+    <Card className="w-full sm:w-96 flex-col">
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormField htmlFor="name" fieldLabel="Name" errors={errors}>
           <Input type="text" {...register("name")} />

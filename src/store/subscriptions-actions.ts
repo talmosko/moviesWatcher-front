@@ -43,7 +43,9 @@ export const postSubscription = (data: SubscriptionInputObject) => {
           withCredentials: true,
         }
       );
-      const subscription = response.data;
+      const { subscription } = response.data as {
+        subscription: SubscriptionObject;
+      };
       dispatch(subscriptionActions.addSubscription(subscription));
       dispatch(subscriptionActions.setSubscriptionsError(null));
       dispatch(subscriptionActions.setSubscriptionsLoading(false));

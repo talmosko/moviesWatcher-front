@@ -4,6 +4,8 @@ import Card from "../UI/Card";
 import CardButtons from "../UI/CardButtons";
 import { deleteUser } from "../../store/users-actions";
 import { useAppDispatch } from "../../hooks/store-hooks";
+import UnorderedList from "../UI/UnorderedList";
+import ListItem from "../UI/ListItem";
 
 const User: React.FC<{ user: UserObject }> = ({ user }) => {
   const navigate = useNavigate();
@@ -42,13 +44,11 @@ const UserPermissions = ({
   return (
     <>
       <p>Permissions:</p>
-      <ul className="pl-2">
+      <UnorderedList>
         {permissions?.map((permission) => (
-          <li className="font-medium text-sm text-gray-600" key={permission}>
-            {permission}
-          </li>
+          <ListItem key={permission}>{permission}</ListItem>
         ))}
-      </ul>
+      </UnorderedList>
     </>
   );
 };
