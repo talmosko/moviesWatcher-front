@@ -10,6 +10,7 @@ import MemberForm from "../../components/Member/MemberForm";
 import { useAppSelector } from "../../hooks/store-hooks";
 import { getMemberResolver } from "../../store/member-actions";
 import { MemberObject } from "../../types/memberTypes";
+import PageLayout from "../PageLayout";
 
 export default function MemberDetails() {
   const { id: memberId } = useParams<{ id: string }>();
@@ -23,7 +24,7 @@ export default function MemberDetails() {
   // If it's not in the store, we need to fetch it
 
   return (
-    <>
+    <PageLayout pageTitle="Edit Member">
       {!!storeMember && <MemberForm member={storeMember} />}
       {!storeMember && (
         <Suspense fallback={<p>Loading Member Data...</p>}>
@@ -43,7 +44,7 @@ export default function MemberDetails() {
           </Await>
         </Suspense>
       )}
-    </>
+    </PageLayout>
   );
 }
 

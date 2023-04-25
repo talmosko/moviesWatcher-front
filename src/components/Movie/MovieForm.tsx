@@ -1,4 +1,4 @@
-import { Controller, useForm } from "react-hook-form";
+import { Control, Controller, FieldErrors, useForm } from "react-hook-form";
 import Button from "../UI/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,9 @@ import { MovieObject, MovieSchema } from "../../types/movieTypes";
 import FormField from "../UI/FormField";
 import { useAppDispatch, useAppSelector } from "../../hooks/store-hooks";
 import { addMovie, updateMovie } from "../../store/movie-actions";
+import Form from "../UI/Form";
+import CardButtons from "../UI/CardButtons";
+import Input from "../UI/Input";
 
 const MovieForm = ({ movie }: { movie?: MovieObject }) => {
   const isEdit = !!movie;
@@ -42,57 +45,32 @@ const MovieForm = ({ movie }: { movie?: MovieObject }) => {
   };
 
   return (
-    <Card className="w-3/5 flex-wrap flex-row gap-6 sm:w-11/12">
-      <form
-        className="flex flex-wrap gap-2 flex-col rounded-md bg-white"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <FormField
-          htmlFor="name"
-          fieldLabel="Name"
-          register={register}
-          errors={errors}
-        />
+    <Card className="flex-wrap flex-row gap-6">
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormField htmlFor="name" fieldLabel="Name" errors={errors}>
+          <Input {...register("name")} />
+        </FormField>
 
-        <Controller
+        <GenresField
           control={control}
-          name="genres"
-          defaultValue={isEdit ? movie.genres : [""]}
-          render={({ field: { onChange, onBlur, value } }) => {
-            return (
-              <>
-                <FormField
-                  htmlFor="genres"
-                  fieldLabel="Genres"
-                  onBlur={onBlur}
-                  onChange={(e) => {
-                    const { value: newString } = e.target as HTMLInputElement;
-                    let newValue = newString.split(",");
-                    onChange(newValue);
-                  }}
-                  value={value || []}
-                  errors={errors}
-                />
-              </>
-            );
-          }}
+          isEdit={isEdit}
+          genres={movie?.genres || [""]}
+          errors={errors}
         />
 
-        <FormField
-          htmlFor="image"
-          fieldLabel="Image"
-          errors={errors}
-          register={register}
-        />
+        <FormField htmlFor="image" fieldLabel="Image" errors={errors}>
+          <Input {...register("image")} />
+        </FormField>
+
         <FormField
           htmlFor="premiered"
-          type="date"
           fieldLabel="Premiered Date"
-          register={register}
           errors={errors}
-        />
+        >
+          <Input type="date" {...register("premiered")} />
+        </FormField>
 
-        <div className="flex flex-wrap gap-2 mt-4">
+        <CardButtons>
           <Button type="submit">Save</Button>
           <Button
             type="button"
@@ -100,17 +78,57 @@ const MovieForm = ({ movie }: { movie?: MovieObject }) => {
           >
             Cancel
           </Button>
-        </div>
+        </CardButtons>
         {submitError && <ErrorMessage>{submitError}</ErrorMessage>}
-      </form>
-      <div className="order-first sm:order-last sm:h-80">
-        <img
-          className="border-2 border-blue-800 sm:max-h-full sm:w-auto sm:order-last rounded-md"
-          src={watch()["image"]}
-          alt={movie?.name}
-        />
+      </Form>
+      <div className="order-first sm:order-last sm:h-80 h-60">
+        {/* //TODO : Add image preview */}
+        {watch()["image"] && (
+          <img
+            className="border-2 border-blue-800 max-h-full w-auto rounded-md"
+            src={watch()["image"]}
+            alt={movie?.name}
+          />
+        )}
       </div>
     </Card>
+  );
+};
+
+const GenresField = ({
+  control,
+  isEdit,
+  genres,
+  errors,
+}: {
+  control: Control<MovieObject, any>;
+  isEdit: boolean;
+  genres: MovieObject["genres"];
+  errors: FieldErrors<MovieObject>;
+}) => {
+  return (
+    <Controller
+      control={control}
+      name="genres"
+      defaultValue={isEdit ? genres : [""]}
+      render={({ field: { onChange, onBlur, value } }) => {
+        return (
+          <FormField htmlFor="genres" fieldLabel="Genres" errors={errors}>
+            <Input
+              type="text"
+              name="genres"
+              onBlur={onBlur}
+              onChange={(e) => {
+                const { value: newString } = e.target as HTMLInputElement;
+                let newValue = newString.split(",");
+                onChange(newValue);
+              }}
+              value={value || []}
+            />
+          </FormField>
+        );
+      }}
+    />
   );
 };
 

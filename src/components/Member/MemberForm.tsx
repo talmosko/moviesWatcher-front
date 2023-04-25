@@ -8,6 +8,9 @@ import FormField from "../UI/FormField";
 import { MemberObject, MemberSchema } from "../../types/memberTypes";
 import { useAppDispatch, useAppSelector } from "../../hooks/store-hooks";
 import { addMember, updateMember } from "../../store/member-actions";
+import Form from "../UI/Form";
+import CardButtons from "../UI/CardButtons";
+import Input from "../UI/Input";
 
 type MemberFormProps = {
   member?: MemberObject;
@@ -40,31 +43,19 @@ const MemberForm = ({ member }: MemberFormProps) => {
   };
 
   return (
-    <Card className="w-3/5 flex-col">
-      <form
-        className="flex flex-wrap gap-2 flex-col rounded-md bg-white"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <FormField
-          htmlFor="name"
-          fieldLabel="Name"
-          register={register}
-          errors={errors}
-        />
-        <FormField
-          htmlFor="email"
-          fieldLabel="Email"
-          register={register}
-          errors={errors}
-        />
-        <FormField
-          htmlFor="city"
-          fieldLabel="City"
-          errors={errors}
-          register={register}
-        />
+    <Card className="w-full sm:w-full">
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormField htmlFor="name" fieldLabel="Name" errors={errors}>
+          <Input type="text" {...register("name")} />
+        </FormField>
+        <FormField htmlFor="email" fieldLabel="Email" errors={errors}>
+          <Input type="text" {...register("email")} />
+        </FormField>
+        <FormField htmlFor="city" fieldLabel="City" errors={errors}>
+          <Input type="text" {...register("city")} />
+        </FormField>
 
-        <div className="flex flex-wrap gap-2 mt-4">
+        <CardButtons>
           <Button type="submit">Save</Button>
           <Button
             type="button"
@@ -72,9 +63,9 @@ const MemberForm = ({ member }: MemberFormProps) => {
           >
             Cancel
           </Button>
-        </div>
+        </CardButtons>
         {submitError && <ErrorMessage>{submitError}</ErrorMessage>}
-      </form>
+      </Form>
     </Card>
   );
 };

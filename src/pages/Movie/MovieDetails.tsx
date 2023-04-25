@@ -10,6 +10,7 @@ import MovieForm from "../../components/Movie/MovieForm";
 import { MovieObject } from "../../types/movieTypes";
 import { getMovieResolver } from "../../store/movie-actions";
 import { useAppSelector } from "../../hooks/store-hooks";
+import PageLayout from "../PageLayout";
 
 export default function MovieDetails() {
   const { id: movieId } = useParams<{ id: string }>();
@@ -21,7 +22,7 @@ export default function MovieDetails() {
   // If the movie is already in the store, we don't need to fetch it again
   // If it's not in the store, we need to fetch it
   return (
-    <>
+    <PageLayout pageTitle="Edit Movie">
       {!!storeMovie && <MovieForm movie={storeMovie} />}
 
       {!storeMovie && (
@@ -42,7 +43,7 @@ export default function MovieDetails() {
           </Await>
         </Suspense>
       )}
-    </>
+    </PageLayout>
   );
 }
 

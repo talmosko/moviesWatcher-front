@@ -1,12 +1,13 @@
 import axios, { AxiosError } from "axios";
 import { json, redirect } from "react-router-dom";
 import AuthForm from "../../components/Auth/AuthForm";
+import PageLayout from "../PageLayout";
 
 const AuthPage = ({ isSignup }: { isSignup: boolean }) => {
   return (
-    <>
+    <PageLayout pageTitle={isSignup ? "Create New User" : "Login"}>
       <AuthForm isSignup={isSignup} />
-    </>
+    </PageLayout>
   );
 };
 

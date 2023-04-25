@@ -26,15 +26,15 @@ export default function RootLayout() {
 
   return (
     <div className="sm:flex sm:gap-3">
-      <header className="bg-white shadow-md sticky top-0 w-full sm:w-52 sm:h-screen">
-        <a href="#" className="logo inline-block text-blue-800 text-6xl ml-3">
+      <header className="bg-white shadow-md sticky top-0 w-full sm:w-52 sm:h-screen sm:shrink-0">
+        <a href="/" className="logo inline-block text-blue-800 text-6xl ml-3">
           LR
         </a>
         <input className="side-menu" type="checkbox" id="side-menu" />
         <label className="hamb" htmlFor="side-menu">
           <span className="hamb-line"></span>
         </label>
-        <nav className="nav w-full h-full bg-white fixed overflow-hidden max-h-0 sm:">
+        <nav className="nav w-full h-full bg-white fixed overflow-hidden max-h-0 sm:w-52">
           <ul>
             <NavItem to="/users/">Users</NavItem>
 
@@ -54,7 +54,7 @@ export default function RootLayout() {
         </nav>
       </header>
 
-      <main>
+      <main className="p-4 w-full">
         <Outlet />
       </main>
     </div>

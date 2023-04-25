@@ -1,49 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import User from "../../components/User/User";
-import axios from "axios";
-import { UserObject } from "../../types/userTypes";
+import { useNavigate } from "react-router-dom";
+import PageLayout from "../PageLayout";
+import { useAppDispatch, useAppSelector } from "../../hooks/store-hooks";
+import { getAllUsers } from "../../store/users-actions";
+
 const UsersPage = () => {
-  const [users, setUsers] = useState<UserObject[]>([]);
-  const [hasGetUsersError, setHasGetUsersError] = useState<boolean>(false);
+  const { users, error: usersError } = useAppSelector((state) => state.users);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await axios.get(import.meta.env.VITE_CINEMA_USERS_API, {
-          withCredentials: true,
-        });
-        if (res.status === 200) {
-          if (res.data.users) {
-            let users: UserObject[] = res.data.users.map((user: UserObject) => {
-              return {
-                ...user,
-                createdAt: user.createdAt && new Date(user.createdAt),
-              };
-            });
-            setUsers(users as UserObject[]);
-          }
-        }
-      } catch (error) {
-        setHasGetUsersError(true);
-        //eslint-disable-next-line no-console
-        console.log(error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+    dispatch(getAllUsers());
+  }, [dispatch]);
 
   return (
-    <>
-      <section>
-        <h1>User Management</h1>
-      </section>
-      <section className="flex gap-4 flex-wrap">
-        {!hasGetUsersError &&
-          users.map((user) => <User key={user._id} user={user} />)}
-        {hasGetUsersError && <p>There was an error getting users</p>}
-      </section>
-    </>
+    <PageLayout
+      pageTitle="Users"
+      titleButtonLabel="+ Add"
+      titleButtonOnClick={() => navigate("new")}
+    >
+      {!usersError && users.map((user) => <User key={user._id} user={user} />)}
+      {usersError && <p>There was an error getting users</p>}
+    </PageLayout>
   );
 };
 

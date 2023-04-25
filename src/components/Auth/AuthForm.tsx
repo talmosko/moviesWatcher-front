@@ -6,6 +6,9 @@ import ErrorMessage from "../UI/ErrorMessage";
 import Card from "../UI/Card";
 import FormField from "../UI/FormField";
 import { AuthObject, AuthSchema } from "../../types/userTypes";
+import EntityButtons from "../UI/CardButtons";
+import Form from "../UI/Form";
+import Input from "../UI/Input";
 
 const AuthForm = ({ isSignup }: { isSignup: boolean }) => {
   const data = useActionData() as { errors?: string[]; message?: string };
@@ -20,6 +23,7 @@ const AuthForm = ({ isSignup }: { isSignup: boolean }) => {
   const { errors } = formState;
 
   const onSubmit = (formData: AuthObject) => {
+    console.log(formData);
     submit(
       { ...formData, isSignup: `${isSignup}` },
       { method: "post", replace: true }
@@ -29,35 +33,24 @@ const AuthForm = ({ isSignup }: { isSignup: boolean }) => {
   };
 
   return (
-    <Card className="w-3/5 flex-col">
-      <h1>{isSignup ? "Create a new user" : "Log in"}</h1>
-
+    <Card>
       {data && data.message && <ErrorMessage>{data.message}</ErrorMessage>}
 
-      <form
-        className="flex flex-wrap gap-2 flex-col rounded-md bg-white"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <FormField
-          htmlFor="userName"
-          fieldLabel="User Name"
-          register={register}
-          errors={errors}
-        />
-        <FormField
-          htmlFor="password"
-          fieldLabel="Password"
-          type="password"
-          register={register}
-          errors={errors}
-        />
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormField htmlFor="userName" fieldLabel="User Name" errors={errors}>
+          <Input {...register("userName")} />
+        </FormField>
 
-        <div className="flex flex-wrap gap-2 mt-4">
+        <FormField htmlFor="password" fieldLabel="Password" errors={errors}>
+          <Input {...register("password")} type="password" />
+        </FormField>
+
+        <EntityButtons>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Submitting" : isSignup ? "Sign Up" : "Login"}
           </Button>
-        </div>
-      </form>
+        </EntityButtons>
+      </Form>
     </Card>
   );
 };

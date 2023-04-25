@@ -1,45 +1,55 @@
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserObject } from "../../types/userTypes";
-import Card, { CardSubTitle, CardTitle } from "../UI/Card";
-import EntityButtons from "../UI/EntityButtons";
+import Card from "../UI/Card";
+import CardButtons from "../UI/CardButtons";
+import { deleteUser } from "../../store/users-actions";
+import { useAppDispatch } from "../../hooks/store-hooks";
 
 const User: React.FC<{ user: UserObject }> = ({ user }) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleEdit = () => {
     navigate(`/users/${user._id}`);
   };
 
   const handleDelete = async () => {
-    try {
-      const address = `${import.meta.env.VITE_CINEMA_USERS_API}/${user._id}`;
-      const res = await axios.delete(address, {
-        withCredentials: true,
-      });
-      if (res.status === 200) {
-        //TODO: something more elegant with store
-        navigate(0);
-      } else {
-        //eslint-disable-next-line no-console
-        console.log(res);
-      }
-    } catch (error) {
-      //eslint-disable-next-line no-console
-      console.log(error);
-    }
+    dispatch(deleteUser(user._id!));
   };
 
   return (
-    <Card className="sm:w-92 flex-col">
-      <CardTitle>{user.fullName}</CardTitle>
-      <CardSubTitle>{user.userName}</CardSubTitle>
+    <Card
+      className="flex-col w-96 sm:w-96"
+      title={user.fullName}
+      subTitle={user.userName}
+    >
       <p>Session Time Out (Minutes): {user.sessionTimeout}</p>
-      <p>Created Data: {user.createdAt?.toLocaleDateString()}</p>
-      <p>Permissions: {user.permissions}</p>
-
-      <EntityButtons onEdit={handleEdit} onDelete={handleDelete} />
+      <p>
+        {"Created Data: "}
+        {user.createdAt && new Date(user.createdAt).toLocaleDateString()}
+      </p>
+      <UserPermissions permissions={user.permissions} />
+      <CardButtons onEdit={handleEdit} onDelete={handleDelete} />
     </Card>
+  );
+};
+
+const UserPermissions = ({
+  permissions,
+}: {
+  permissions: UserObject["permissions"];
+}) => {
+  return (
+    <>
+      <p>Permissions:</p>
+      <ul className="pl-2">
+        {permissions?.map((permission) => (
+          <li className="font-medium text-sm text-gray-600" key={permission}>
+            {permission}
+          </li>
+        ))}
+      </ul>
+    </>
   );
 };
 

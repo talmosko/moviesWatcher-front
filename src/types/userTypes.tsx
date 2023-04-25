@@ -46,7 +46,7 @@ export const UserSchema = z.object({
   lastName: z.string().nonempty("Required"),
   userName: z.string().email("Invalid email"),
   fullName: z.string().optional(),
-  createdAt: z.date().optional(),
+  createdAt: z.string().optional(),
   sessionTimeout: z.number().nonnegative("Must be a positive number"),
   permissions: z.array(PermissionsTypesSchema).optional(),
   password: z.string().nonempty().optional(),
