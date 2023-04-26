@@ -24,12 +24,15 @@ export const authLoader = (
     //get permissions from local storage
     const permissions = getPermissions();
     if (!permissions || !permissions.includes(permission)) {
-      return redirect("/login");
+      return redirect("/unauthorized");
     }
 
     //sending nextLoader
-    if (nextLoader) return await nextLoader(args);
+    if (nextLoader) {
+      const res = await nextLoader(args);
+      return { ...res, permissions };
+    }
 
-    return {};
+    return { permissions };
   };
 };

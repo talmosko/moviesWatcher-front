@@ -32,7 +32,7 @@ const AuthForm = ({ isSignup }: { isSignup: boolean }) => {
   };
 
   return (
-    <Card>
+    <Card className="flex-col sm:w-[22rem] w-full">
       {data && data.message && <ErrorMessage>{data.message}</ErrorMessage>}
 
       <Form onSubmit={handleSubmit(onSubmit)}>

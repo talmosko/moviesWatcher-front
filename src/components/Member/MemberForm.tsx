@@ -43,7 +43,7 @@ const MemberForm = ({ member }: MemberFormProps) => {
   };
 
   return (
-    <Card className="w-full sm:w-96 flex-col">
+    <Card className="flex-wrap flex-row gap-6">
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormField htmlFor="name" fieldLabel="Name" errors={errors}>
           <Input type="text" {...register("name")} />
@@ -56,13 +56,13 @@ const MemberForm = ({ member }: MemberFormProps) => {
         </FormField>
 
         <CardButtons>
-          <Button type="submit">Save</Button>
           <Button
             type="button"
             onClick={() => navigate("/members", { replace: true })}
           >
             Cancel
           </Button>
+          <Button type="submit">Save</Button>
         </CardButtons>
         {submitError && <ErrorMessage>{submitError}</ErrorMessage>}
       </Form>

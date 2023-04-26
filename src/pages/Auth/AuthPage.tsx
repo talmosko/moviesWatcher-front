@@ -1,14 +1,24 @@
 import axios, { AxiosError } from "axios";
-import { json, redirect } from "react-router-dom";
+import { Link, json, redirect } from "react-router-dom";
 import AuthForm from "../../components/Auth/AuthForm";
 import PageLayout from "../PageLayout";
+import { getPermissions } from "../../utils/auth";
 
 const AuthPage = ({ isSignup }: { isSignup: boolean }) => {
   const pageTitle = isSignup ? "Create New User" : "Login";
-
+  const pageSubTitle = isSignup ? "Blah blah blah" : undefined;
   return (
-    <PageLayout pageTitle={pageTitle}>
+    <PageLayout
+      pageTitle={pageTitle}
+      pageSubTitle={pageSubTitle}
+      className="flex-col"
+    >
       <AuthForm isSignup={isSignup} />
+      {!isSignup && (
+        <Link className="underline text-blue-600 font-semibold" to="/signup">
+          Create New User
+        </Link>
+      )}
     </PageLayout>
   );
 };
@@ -52,4 +62,13 @@ export async function action({ request }: { request: Request }) {
     } else
       throw json({ message: "Could not authenticate user." }, { status: 500 });
   }
+}
+
+export function loader() {
+  const permissions = getPermissions();
+  if (permissions) {
+    return redirect("/");
+  }
+
+  return {};
 }

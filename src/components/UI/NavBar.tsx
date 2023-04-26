@@ -36,9 +36,11 @@ const NavItem = ({
 const NavBar = ({
   setIsMenuOpen,
   handleLogout,
+  isLoggedIn,
 }: {
   handleLogout: () => void;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoggedIn: boolean;
 }) => {
   const closeMenu = () => setIsMenuOpen(false);
 
@@ -72,16 +74,30 @@ const NavBar = ({
           )}
         </NavItem>
 
-        <NavItem
-          onClick={() => {
-            closeMenu();
-            handleLogout();
-          }}
-          to="/"
-        >
-          <LogoutIcon />
-          Logout
-        </NavItem>
+        {isLoggedIn && (
+          <NavItem
+            onClick={() => {
+              closeMenu();
+              handleLogout();
+            }}
+            to="/"
+          >
+            <LogoutIcon />
+            Logout
+          </NavItem>
+        )}
+
+        {!isLoggedIn && (
+          <NavItem
+            onClick={() => {
+              closeMenu();
+            }}
+            to="/login"
+          >
+            <LoginIcon />
+            Login
+          </NavItem>
+        )}
       </ul>
     </nav>
   );
