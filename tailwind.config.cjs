@@ -6,7 +6,9 @@ module.exports = {
     "./src/**/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fill: ["hover"],
+    },
 
     screens: {
       sm: "640px",
@@ -25,5 +27,32 @@ module.exports = {
       // => @media (min-width: 1536px) { ... }
     },
   },
-  plugins: [],
+  plugins: [
+    // ...
+    function ({ addUtilities, e, theme }) {
+      const newUtilities = {};
+      Object.entries(theme("colors")).map(([name, value]) => {
+        if (typeof value === "string") {
+          newUtilities[`.hover\\:fill-${name}`] = {
+            "--fill-color": value,
+            fill: "var(--fill-color)",
+          };
+          newUtilities[`.hover\\:fill-${name}:hover`] = {
+            fill: value,
+          };
+        } else {
+          Object.entries(value).map(([shade, color]) => {
+            newUtilities[`.hover\\:fill-${name}-${shade}`] = {
+              "--fill-color": color,
+              fill: "var(--fill-color)",
+            };
+            newUtilities[`.hover\\:fill-${name}-${shade}:hover`] = {
+              fill: color,
+            };
+          });
+        }
+      });
+      addUtilities(newUtilities, ["responsive", "hover"]);
+    },
+  ],
 };

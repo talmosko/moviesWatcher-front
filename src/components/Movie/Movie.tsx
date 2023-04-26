@@ -23,7 +23,7 @@ const Movie = ({ movie }: { movie: MovieObject }) => {
   const cardTitle = `${movie.name}, ${movie.premiered.substring(0, 4)}`;
 
   return (
-    <Card className="sm:w-96 w-full gap-2">
+    <Card className="lg:w-[49%] w-full gap-4">
       <MovieImg movie={movie} />
       <div className="flex flex-col w-full">
         <CardTitle>{cardTitle}</CardTitle>
@@ -80,7 +80,7 @@ const SubscriptionsForMovie = ({
 
 const MovieImg = ({ movie }: { movie: MovieObject }) => {
   return (
-    <div className="w-40 flex">
+    <div className="w-44 flex">
       <img
         src={movie.image}
         className="self-center"

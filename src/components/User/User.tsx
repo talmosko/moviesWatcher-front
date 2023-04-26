@@ -21,7 +21,7 @@ const User: React.FC<{ user: UserObject }> = ({ user }) => {
 
   return (
     <Card
-      className="flex-col w-96 sm:w-96"
+      className="flex-col lg:w-[49%] w-full"
       title={user.fullName}
       subTitle={user.userName}
     >

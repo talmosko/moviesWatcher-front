@@ -25,7 +25,7 @@ const Member: React.FC<{ member: MemberObject }> = ({ member }) => {
 
   return (
     <Card
-      className="w-full sm:w-96 flex-col"
+      className="flex-col lg:w-[49%] w-full"
       title={member.name}
       subTitle={member.email}
     >
