@@ -5,6 +5,8 @@ import {
   useActionData,
   useLoaderData,
   useNavigate,
+  useNavigation,
+  useRevalidator,
   useSubmit,
 } from "react-router-dom";
 import NavBar from "../components/UI/NavBar";
@@ -15,43 +17,42 @@ import { getSessionTimeout } from "../utils/auth";
 export default function RootLayout() {
   const logout = useLogout();
   const navigate = useNavigate();
-  // const submit = useSubmit();
-  // const data = useActionData();
-  // console.log(data);
-  // const sessionTimeout = useLoaderData() as number | null;
-  const sessionTimeout = getSessionTimeout();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const navigation = useNavigation();
+  console.log(navigation);
+  const { sessionTimeout } = getSessionTimeout();
+  const { sessionTimeout: sessionTimeoutLoader } = useLoaderData() as {
+    sessionTimeout: number;
+  };
+  console.log("sessionTimeoutLoader " + sessionTimeoutLoader);
+  console.log("sessionTimeout " + sessionTimeout);
+
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [timeoutId, setTimeoutId] = useState<number | null>(null);
+  const isLoggedIn = !!timeoutId;
 
   const handleLogout = useCallback(async () => {
     const result = await logout();
 
     if (result && result.success) {
-      setIsLoggedIn(false);
+      setTimeoutId(null);
       navigate("/login");
     }
   }, [logout, navigate]);
 
-  // const handleLogout = useCallback(async () => {
-  //   submit({}, { method: "post", replace: true });
-  // }, [submit]);
-
   useEffect(() => {
-    if (!sessionTimeout) {
+    if (!sessionTimeout || timeoutId) {
       return;
     }
 
-    setIsLoggedIn(true);
-
-    const timeoutId = setTimeout(() => {
-      setIsLoggedIn(false);
-      handleLogout();
-    }, sessionTimeout * 1000 * 60);
-
+    setTimeoutId(
+      setTimeout(() => {
+        handleLogout();
+      }, sessionTimeout * 1000 * 60)
+    );
     return () => {
-      clearTimeout(timeoutId);
+      timeoutId && clearTimeout(timeoutId);
     };
-  }, [handleLogout, sessionTimeout]);
+  }, [handleLogout, sessionTimeout, timeoutId]);
 
   return (
     <div className="sm:flex sm:gap-3">
