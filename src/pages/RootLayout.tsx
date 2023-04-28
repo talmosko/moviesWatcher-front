@@ -1,13 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  Link,
-  Outlet,
-  json,
-  useActionData,
-  useLoaderData,
-  useNavigate,
-  useSubmit,
-} from "react-router-dom";
+import { Link, Outlet, json, useNavigate } from "react-router-dom";
 import NavBar from "../components/UI/NavBar";
 import axios, { AxiosError } from "axios";
 import { useLogout } from "../hooks/use-logout";
@@ -15,32 +7,21 @@ import { getSessionTimeout } from "../utils/auth";
 import { MainIcon } from "../components/UI/Icons";
 
 export default function RootLayout() {
-  // const logout = useLogout();
-  const submit = useSubmit();
+  const logout = useLogout();
   const navigate = useNavigate();
-  // const { sessionTimeout } = getSessionTimeout();
-  const { sessionTimeout } = useLoaderData() as { sessionTimeout: number };
-  const actionData = useActionData() as { success: boolean };
-  console.log(actionData);
-  console.log(sessionTimeout);
+  const { sessionTimeout } = getSessionTimeout();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [timeoutId, setTimeoutId] = useState<number | null>(null);
   const isLoggedIn = !!timeoutId;
 
   const handleLogout = useCallback(async () => {
-    // const result = await logout();
+    const result = await logout();
 
-    // if (result && result.success) {
-    //   setTimeoutId(null);
-    //   navigate("/login");
-    // }
-
-    submit(null, { method: "post", action: "/" });
-    if (actionData && actionData.success) {
+    if (result && result.success) {
       setTimeoutId(null);
       navigate("/login");
     }
-  }, [navigate, submit, actionData]);
+  }, [logout, navigate]);
 
   useEffect(() => {
     if (!sessionTimeout || timeoutId) {
