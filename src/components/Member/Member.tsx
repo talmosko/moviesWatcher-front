@@ -9,8 +9,10 @@ import { useState } from "react";
 import Button from "../UI/Button";
 import UnorderedList from "../UI/UnorderedList";
 import ListItem from "../UI/ListItem";
+import { usePermissions } from "../../hooks/use-permissions";
 
 const Member: React.FC<{ member: MemberObject }> = ({ member }) => {
+  const permissions = usePermissions();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isSubFormOpen, setIsSubFormOpen] = useState<boolean>(false);
@@ -39,13 +41,17 @@ const Member: React.FC<{ member: MemberObject }> = ({ member }) => {
       )}
 
       <EntityButtons>
-        {!isSubFormOpen && (
+        {!isSubFormOpen && permissions.CreateSubscriptions && (
           <Button className="w-20" onClick={() => setIsSubFormOpen(true)}>
             Subscribe
           </Button>
         )}
-        <Button onClick={handleEdit}>Edit</Button>
-        <Button onClick={handleDelete}>Delete</Button>
+        {permissions.UpdateSubscriptions && (
+          <Button onClick={handleEdit}>Edit</Button>
+        )}
+        {permissions.DeleteSubscriptions && (
+          <Button onClick={handleDelete}>Delete</Button>
+        )}
       </EntityButtons>
     </Card>
   );

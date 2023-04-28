@@ -26,7 +26,7 @@ export const AllPermissionsDict = {
   UpdateMovies: AllPermissions[6],
   DeleteMovies: AllPermissions[7],
   SiteAdmin: AllPermissions[8],
-} as const;
+};
 
 export const SubscriptionsCUDPermissions = [
   AllPermissionsDict.CreateSubscriptions,

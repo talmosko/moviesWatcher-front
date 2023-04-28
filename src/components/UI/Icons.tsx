@@ -3,7 +3,8 @@ import { ReactComponent as BaseLogoutIcon } from "../../assets/logout.svg";
 import { ReactComponent as BaseMembersIcon } from "../../assets/members.svg";
 import { ReactComponent as BaseMoviesIcon } from "../../assets/movies.svg";
 import { ReactComponent as BaseUsersIcon } from "../../assets/users.svg";
-import React, { FunctionComponent, SVGProps } from "react";
+import { ReactComponent as BaseMainLogo } from "../../assets/stars.svg";
+import { FunctionComponent, SVGProps } from "react";
 
 // Define a type for the IconComponent props
 type IconComponentProps = SVGProps<SVGSVGElement> & {
@@ -45,5 +46,6 @@ const LogoutIcon = withCustomIcon(BaseLogoutIcon);
 const MembersIcon = withCustomIcon(BaseMembersIcon);
 const MoviesIcon = withCustomIcon(BaseMoviesIcon);
 const UsersIcon = withCustomIcon(BaseUsersIcon);
+const MainIcon = withCustomIcon(BaseMainLogo);
 
-export { LoginIcon, LogoutIcon, MembersIcon, MoviesIcon, UsersIcon };
+export { LoginIcon, LogoutIcon, MembersIcon, MoviesIcon, UsersIcon, MainIcon };

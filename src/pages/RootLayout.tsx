@@ -1,43 +1,46 @@
 import { useCallback, useEffect, useState } from "react";
 import {
+  Link,
   Outlet,
   json,
   useActionData,
   useLoaderData,
   useNavigate,
-  useNavigation,
-  useRevalidator,
   useSubmit,
 } from "react-router-dom";
 import NavBar from "../components/UI/NavBar";
 import axios, { AxiosError } from "axios";
 import { useLogout } from "../hooks/use-logout";
 import { getSessionTimeout } from "../utils/auth";
+import { MainIcon } from "../components/UI/Icons";
 
 export default function RootLayout() {
-  const logout = useLogout();
+  // const logout = useLogout();
+  const submit = useSubmit();
   const navigate = useNavigate();
-  const navigation = useNavigation();
-  console.log(navigation);
-  const { sessionTimeout } = getSessionTimeout();
-  const { sessionTimeout: sessionTimeoutLoader } = useLoaderData() as {
-    sessionTimeout: number;
-  };
-  console.log("sessionTimeoutLoader " + sessionTimeoutLoader);
-  console.log("sessionTimeout " + sessionTimeout);
-
+  // const { sessionTimeout } = getSessionTimeout();
+  const { sessionTimeout } = useLoaderData() as { sessionTimeout: number };
+  const actionData = useActionData() as { success: boolean };
+  console.log(actionData);
+  console.log(sessionTimeout);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [timeoutId, setTimeoutId] = useState<number | null>(null);
   const isLoggedIn = !!timeoutId;
 
   const handleLogout = useCallback(async () => {
-    const result = await logout();
+    // const result = await logout();
 
-    if (result && result.success) {
+    // if (result && result.success) {
+    //   setTimeoutId(null);
+    //   navigate("/login");
+    // }
+
+    submit(null, { method: "post", action: "/" });
+    if (actionData && actionData.success) {
       setTimeoutId(null);
       navigate("/login");
     }
-  }, [logout, navigate]);
+  }, [navigate, submit, actionData]);
 
   useEffect(() => {
     if (!sessionTimeout || timeoutId) {
@@ -56,7 +59,7 @@ export default function RootLayout() {
 
   return (
     <div className="sm:flex sm:gap-3">
-      <header className="bg-white shadow-md sticky top-0 w-full sm:w-52 sm:h-screen sm:shrink-0">
+      <header className="items-center bg-white shadow-md sticky top-0 w-full sm:w-52 sm:h-screen sm:shrink-0">
         <MainLogo />
         <HamburgerIcon isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
         <NavBar
@@ -98,12 +101,17 @@ const HamburgerIcon = ({
 
 const MainLogo = () => {
   return (
-    <a href="/" className="logo inline-block text-blue-800 text-6xl ml-3">
-      LR
-    </a>
+    <div className="inline-block pb-2">
+      <Link to="/" className="flex text-2xl ml-4 sm:ml-10 mt-4 items-center">
+        <span>
+          <MainIcon className="mr-2 w-6 h-6" />
+        </span>
+        <span className="text-blue-800 font-bold">Ci</span>
+        <span className="text-gray-500 font-semibold">nema</span>
+      </Link>
+    </div>
   );
 };
-
 export async function logoutAction() {
   try {
     await axios.post(

@@ -6,11 +6,13 @@ import { getAllMovies } from "../../store/movie-actions";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "../PageLayout";
 import { getAllSubscriptions } from "../../store/subscriptions-actions";
+import { usePermissions } from "../../hooks/use-permissions";
 
 const MoviesPage = () => {
   const { movies, error: moviesError } = useAppSelector(
     (state: RootState) => state.movies
   );
+  const permissions = usePermissions();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   useEffect(() => {
@@ -23,6 +25,7 @@ const MoviesPage = () => {
       pageTitle="Movies"
       titleButtonLabel="+ Add"
       titleButtonOnClick={() => navigate("new")}
+      hasButtonPermission={permissions.CreateMovies}
     >
       {!moviesError &&
         movies.map((movie) => <Movie key={movie._id} movie={movie} />)}

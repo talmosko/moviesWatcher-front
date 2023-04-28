@@ -5,7 +5,6 @@ export function getSessionTimeout() {
   const sessionTimeout = localStorage.getItem("sessionTimeout") as
     | number
     | null;
-  console.log("inside the loader " + sessionTimeout);
   return { sessionTimeout };
 }
 

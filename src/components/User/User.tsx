@@ -6,10 +6,13 @@ import { deleteUser } from "../../store/users-actions";
 import { useAppDispatch } from "../../hooks/store-hooks";
 import UnorderedList from "../UI/UnorderedList";
 import ListItem from "../UI/ListItem";
+import Button from "../UI/Button";
+import { usePermissions } from "../../hooks/use-permissions";
 
 const User: React.FC<{ user: UserObject }> = ({ user }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const permissions = usePermissions();
 
   const handleEdit = () => {
     navigate(`/users/${user._id}`);
@@ -31,7 +34,12 @@ const User: React.FC<{ user: UserObject }> = ({ user }) => {
         {user.createdAt && new Date(user.createdAt).toLocaleDateString()}
       </p>
       <UserPermissions permissions={user.permissions} />
-      <CardButtons onEdit={handleEdit} onDelete={handleDelete} />
+      {permissions.SiteAdmin && (
+        <CardButtons>
+          <Button onClick={handleEdit}>Edit</Button>
+          <Button onClick={handleDelete}>Delete</Button>
+        </CardButtons>
+      )}
     </Card>
   );
 };

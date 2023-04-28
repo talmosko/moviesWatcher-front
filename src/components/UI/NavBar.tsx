@@ -7,6 +7,7 @@ import {
   MoviesIcon,
   UsersIcon,
 } from "../../components/UI/Icons";
+import { usePermissions } from "../../hooks/use-permissions";
 
 const NavItem = ({
   onClick,
@@ -42,37 +43,44 @@ const NavBar = ({
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isLoggedIn: boolean;
 }) => {
+  const permissions = usePermissions();
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
     <nav className="nav w-full h-full bg-white fixed overflow-hidden max-h-0 sm:w-52">
       <ul className="flex flex-col gap-1 mt-4">
-        <NavItem onClick={closeMenu} to="/users/">
-          {({ isActive }) => (
-            <>
-              <UsersIcon isActive={isActive} />
-              Users
-            </>
-          )}
-        </NavItem>
+        {permissions.SiteAdmin && (
+          <NavItem onClick={closeMenu} to="/users/">
+            {({ isActive }) => (
+              <>
+                <UsersIcon isActive={isActive} />
+                Users
+              </>
+            )}
+          </NavItem>
+        )}
 
-        <NavItem onClick={closeMenu} to="/movies/">
-          {({ isActive }) => (
-            <>
-              <MoviesIcon isActive={isActive} />
-              Movies
-            </>
-          )}
-        </NavItem>
+        {permissions.ViewMovies && (
+          <NavItem onClick={closeMenu} to="/movies/">
+            {({ isActive }) => (
+              <>
+                <MoviesIcon isActive={isActive} />
+                Movies
+              </>
+            )}
+          </NavItem>
+        )}
 
-        <NavItem onClick={closeMenu} to="/members/">
-          {({ isActive }) => (
-            <>
-              <MembersIcon isActive={isActive} />
-              Members
-            </>
-          )}
-        </NavItem>
+        {permissions.ViewSubscriptions && (
+          <NavItem onClick={closeMenu} to="/members/">
+            {({ isActive }) => (
+              <>
+                <MembersIcon isActive={isActive} />
+                Members
+              </>
+            )}
+          </NavItem>
+        )}
 
         {isLoggedIn && (
           <NavItem

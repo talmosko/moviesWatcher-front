@@ -1,17 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import { MovieObject } from "../../types/movieTypes";
 import Card, { CardSubTitle, CardTitle } from "../UI/Card";
-import EntityButtons from "../UI/CardButtons";
+import CardButtons from "../UI/CardButtons";
 import { useAppDispatch, useAppSelector } from "../../hooks/store-hooks";
 import { deleteMovie } from "../../store/movie-actions";
 import { SubscriptionForMovieObject } from "../../types/subscriptionTypes";
 import UnorderedList from "../UI/UnorderedList";
 import ListItem from "../UI/ListItem";
+import { usePermissions } from "../../hooks/use-permissions";
+import Button from "../UI/Button";
 
 const Movie = ({ movie }: { movie: MovieObject }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
+  const permissions = usePermissions();
   const handleEdit = () => {
     navigate(`/movies/${movie._id}`);
   };
@@ -23,13 +25,20 @@ const Movie = ({ movie }: { movie: MovieObject }) => {
   const cardTitle = `${movie.name}, ${movie.premiered.substring(0, 4)}`;
 
   return (
-    <Card className="lg:w-[49%] w-full gap-4">
+    <Card className="lg:w-[49%] w-full gap-4 items-start">
       <MovieImg movie={movie} />
       <div className="flex flex-col w-full">
         <CardTitle>{cardTitle}</CardTitle>
         <CardSubTitle>{movie.genres?.join(", ")}</CardSubTitle>
         <SubscriptionsForMovie movieId={movie._id} />
-        <EntityButtons onEdit={handleEdit} onDelete={handleDelete} />
+        <CardButtons>
+          {permissions.UpdateMovies && (
+            <Button onClick={handleEdit}>Edit</Button>
+          )}
+          {permissions.DeleteMovies && (
+            <Button onClick={handleDelete}>Delete</Button>
+          )}
+        </CardButtons>
       </div>
     </Card>
   );

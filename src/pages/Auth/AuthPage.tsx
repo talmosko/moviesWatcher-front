@@ -6,7 +6,9 @@ import { getPermissions } from "../../utils/auth";
 
 const AuthPage = ({ isSignup }: { isSignup: boolean }) => {
   const pageTitle = isSignup ? "Create New User" : "Login";
-  const pageSubTitle = isSignup ? "Blah blah blah" : undefined;
+  const pageSubTitle = isSignup
+    ? "First, SiteAdmin needs to create the user"
+    : undefined;
   return (
     <PageLayout
       pageTitle={pageTitle}

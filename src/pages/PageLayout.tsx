@@ -10,6 +10,7 @@ type Props = {
   titleButtonLabel?: string;
   children?: ReactNode;
   className?: string;
+  hasButtonPermission?: boolean;
 };
 
 const PageLayout = (props: Props) => {
@@ -21,11 +22,13 @@ const PageLayout = (props: Props) => {
     <div className="flex flex-col">
       <section className="flex flex-row gap-3">
         <PageTitle>{props.pageTitle}</PageTitle>
-        {props.titleButtonLabel && props.titleButtonOnClick && (
-          <Button className="w-16" onClick={props.titleButtonOnClick}>
-            {props.titleButtonLabel}
-          </Button>
-        )}
+        {props.hasButtonPermission &&
+          props.titleButtonLabel &&
+          props.titleButtonOnClick && (
+            <Button className="w-16" onClick={props.titleButtonOnClick}>
+              {props.titleButtonLabel}
+            </Button>
+          )}
       </section>
       <section>
         {props.pageSubTitle && (

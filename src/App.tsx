@@ -100,7 +100,7 @@ const router = createBrowserRouter([
           {
             path: ":id",
             loader: authLoader(
-              AllPermissionsDict.CreateSubscriptions,
+              AllPermissionsDict.UpdateSubscriptions,
               memberDetailsLoader
             ),
             element: <MemberDetails />,
