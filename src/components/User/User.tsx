@@ -62,3 +62,4 @@ const UserPermissions = ({
 };
 
 export default User;
+    

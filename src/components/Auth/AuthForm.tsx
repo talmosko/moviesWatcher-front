@@ -55,3 +55,4 @@ const AuthForm = ({ isSignup }: { isSignup: boolean }) => {
 };
 
 export default AuthForm;
+    

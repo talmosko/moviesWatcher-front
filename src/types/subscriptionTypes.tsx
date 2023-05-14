@@ -38,3 +38,4 @@ const SubscriptionForMovieSchema = z.object({
 export type SubscriptionForMovieObject = z.infer<
   typeof SubscriptionForMovieSchema
 >;
+    

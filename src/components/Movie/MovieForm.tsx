@@ -133,3 +133,4 @@ const GenresField = ({
 };
 
 export default MovieForm;
+    
