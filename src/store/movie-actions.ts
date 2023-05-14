@@ -117,4 +117,4 @@ export const getMovieResolver = (movieId: string | undefined) => {
     withCredentials: true,
   });
 };
-   
+    
