@@ -54,3 +54,4 @@ export function userDetailsLoader(args: LoaderFunctionArgs) {
     user: getUserResolver(id),
   });
 }
+ 

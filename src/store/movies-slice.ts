@@ -52,3 +52,4 @@ const moviesSlice = createSlice({
 export const movieActions = moviesSlice.actions;
 
 export default moviesSlice;
+ 

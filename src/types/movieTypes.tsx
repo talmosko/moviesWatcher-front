@@ -10,3 +10,4 @@ export const MovieSchema = z.object({
 });
 
 export type MovieObject = z.infer<typeof MovieSchema>;
+ 

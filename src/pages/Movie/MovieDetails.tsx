@@ -53,3 +53,4 @@ export function movieDetailsLoader(args: LoaderFunctionArgs) {
     movie: getMovieResolver(id),
   });
 }
+ 
