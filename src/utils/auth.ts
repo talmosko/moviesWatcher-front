@@ -36,4 +36,4 @@ export const authLoader = (
     return { permissions };
   };
 };
- 
+  

@@ -19,4 +19,4 @@ export const usePermissions = () => {
 
   return permissionDict;
 };
- 
+  

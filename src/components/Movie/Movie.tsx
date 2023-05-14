@@ -101,4 +101,4 @@ const MovieImg = ({ movie }: { movie: MovieObject }) => {
 };
 
 export default Movie;
- 
+  

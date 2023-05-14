@@ -54,4 +54,4 @@ export function memberDetailsLoader(args: LoaderFunctionArgs) {
     member: getMemberResolver(id),
   });
 }
- 
+  
